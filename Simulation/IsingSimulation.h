@@ -73,7 +73,7 @@ public:
             }
         }
 
-        return energy/2;
+        return energy/2 ;
     }
 
     void metropolisStep()
@@ -107,17 +107,28 @@ public:
         }
     }
 
-    void run()
+    // void run()
+    // {
+    //     int totalParticles =
+    //         params.latticeSize * params.latticeSize;
+    //
+    //     for (int sweep = 0; sweep < params.monteCarloSteps; sweep++)
+    //     {
+    //         for (int i = 0; i < totalParticles; i++)
+    //         {
+    //             metropolisStep();
+    //         }
+    //     }
+    // }
+
+    void monteCarloStep()
     {
         int totalParticles =
             params.latticeSize * params.latticeSize;
 
-        for (int sweep = 0; sweep < params.monteCarloSteps; sweep++)
+        for (int i = 0; i < totalParticles; i++)
         {
-            for (int i = 0; i < totalParticles; i++)
-            {
-                metropolisStep();
-            }
+            metropolisStep();
         }
     }
 

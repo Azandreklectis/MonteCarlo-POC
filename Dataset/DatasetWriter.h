@@ -45,7 +45,7 @@ public:
              << params.magneticField << ","
              << params.couplingConstant << ","
              << params.latticeSize << ","
-             << params.monteCarloSweeps << ","
+             << params.monteCarloSteps << ","
              << energy << ","
              << magnetization << "\n";
 

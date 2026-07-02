@@ -13,6 +13,8 @@ add_executable(OpenACC_Test
         Simulation/IsingSimulation.h
         Visualizer/Visualizer.h
         Dataset/DatasetWriter.h
+        GIF/gif.h
+        GIF/GIFGenerator.h
 )
 
 target_link_libraries(OpenACC_Test PRIVATE
