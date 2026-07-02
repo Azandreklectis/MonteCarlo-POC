@@ -73,7 +73,7 @@ public:
             }
         }
 
-        return energy ;
+        return energy/2;
     }
 
     void metropolisStep()
@@ -172,5 +172,9 @@ public:
 
         fout.close();
     }
+    const vector<vector<Particle>>& getLattice() const
+    {
+        return lattice;
+    } // getter
 
 };

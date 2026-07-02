@@ -4,11 +4,20 @@ project(OpenACC_Test)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(OpenACC_Test main.cpp
+find_package(OpenCV REQUIRED)
+
+add_executable(OpenACC_Test
+        main.cpp
         Entities/Particle.h
         SimulationParameters/SimulationParameters.h
         Simulation/IsingSimulation.h
+        Visualizer/Visualizer.h
+        Dataset/DatasetWriter.h
+)
+
+target_link_libraries(OpenACC_Test PRIVATE
+        ${OpenCV_LIBS}
+        gomp
 )
 
 target_compile_options(OpenACC_Test PRIVATE -fopenacc)
-target_link_libraries(OpenACC_Test PRIVATE gomp)
