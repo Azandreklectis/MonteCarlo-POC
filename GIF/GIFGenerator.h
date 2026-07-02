@@ -78,6 +78,5 @@ public:
 
         GifEnd(&writer);
 
-        // We'll add the rest here step by step...
     }
 };
