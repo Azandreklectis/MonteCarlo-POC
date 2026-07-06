@@ -53,31 +53,18 @@ public:
 
     void initialize()
     {
+        #pragma acc parallel loop collapse(2)
         for (int i = 0; i < params.latticeSize; i++)
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
                 double random =RandomGenerator::uniform(rngStates[i][j].state);
 
-                lattice[i][j].spin =
-                    (random < 0.5) ? -1 : 1;
+                lattice[i][j].spin =(random < 0.5) ? -1 : 1;
             }
         }
     }
-
-    bool acceptMove(double deltaEnergy, double random)
-    {
-        if (deltaEnergy <= 0)
-        {
-            return true;
-        }
-
-        double probability =
-            exp(-deltaEnergy / params.temperature);
-
-        return random <= probability;
-    }
-
+    
     double localEnergy(int row, int col)
     {
         int N = params.latticeSize;
@@ -196,22 +183,32 @@ public:
                 rngStates[row][col].state
             );
 
-        if (acceptMove(deltaEnergy, random))
+        if (deltaEnergy <= 0)
         {
             lattice[row][col].flip();
         }
+        else
+        {
+            double probability =
+                exp(-deltaEnergy / params.temperature);
+
+            if (random <= probability)
+            {
+                lattice[row][col].flip();
+            }
+        }
     }
-    
+    // call stack phatt gayi inline kar code
     void updateBlack()
     {
         int N = params.latticeSize;
 
+        #pragma acc parallel loop collapse(2)
         for (int row = 0; row < N; row++)
         {
-            int startCol = row % 2;
-
             for (int k = 0; k < N / 2; k++)
             {
+                int startCol = row % 2;
                 int col = startCol + 2 * k;
 
                 metropolisUpdate(row, col);
@@ -222,12 +219,12 @@ public:
     {
         int N = params.latticeSize;
 
+        #pragma acc parallel loop collapse(2)
         for (int row = 0; row < N; row++)
         {
-            int startCol = (row + 1) % 2;
-
             for (int k = 0; k < N / 2; k++)
             {
+                int startCol = (row + 1) % 2;
                 int col = startCol + 2 * k;
 
                 metropolisUpdate(row, col);
@@ -269,9 +266,10 @@ public:
             }
         }
 
-        int totalParticles = params.latticeSize * params.latticeSize;
+        int totalParticles =
+            params.latticeSize * params.latticeSize;
 
-        return (double)totalSpin / totalParticles;
+        return static_cast<double>(totalSpin) / totalParticles;
     }
 
     void printLattice()

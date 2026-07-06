@@ -17,8 +17,10 @@ add_executable(OpenACC_Test
         GIF/GIFGenerator.h
         Utilities/RandomGenerator.h
 )
-target_include_directories(OpenACC_Test PRIVATE
-        indicators/include
+target_compile_options(OpenACC_Test PRIVATE
+        -fopenacc
+        -O3
+        -fopt-info-omp
 )
 
 target_link_libraries(OpenACC_Test PRIVATE
