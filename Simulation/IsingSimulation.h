@@ -15,26 +15,25 @@ class IsingSimulation
 {
 private:
 
-    vector<vector<Particle>> lattice;
+    vector<Particle> lattice;
+    vector<RNGState> rngStates;
     SimulationParameters params;
-    vector<vector<RNGState>> rngStates;
     //random_device{}()
+
+    inline int index(int row, int col) const
+    {
+        return row * params.latticeSize + col;
+    }
 public:
 
     IsingSimulation(const SimulationParameters& params)
     : params(params)
     {
-        // Allocate lattice
-        lattice.resize(
-            params.latticeSize,
-            vector<Particle>(params.latticeSize)
-        );
+        int totalParticles =
+            params.latticeSize * params.latticeSize;
 
-        // Allocate one RNG state per lattice site
-        rngStates.resize(
-            params.latticeSize,
-            vector<RNGState>(params.latticeSize)
-        );
+        lattice.resize(totalParticles);
+        rngStates.resize(totalParticles);
 
         unsigned int seed = random_device{}();
 
@@ -42,8 +41,9 @@ public:
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
-                rngStates[i][j].state =
-                    seed + i * params.latticeSize + j;
+                int idx = index(i, j);
+
+                rngStates[idx].state = seed + idx;
             }
         }
 
@@ -58,23 +58,27 @@ public:
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
-                double random =RandomGenerator::uniform(rngStates[i][j].state);
+                int idx = index(i, j);
 
-                lattice[i][j].spin =(random < 0.5) ? -1 : 1;
+                double random =
+                    RandomGenerator::uniform(rngStates[idx].state);
+
+                lattice[idx].spin =
+                    (random < 0.5) ? -1 : 1;
             }
         }
     }
-    
+
     double localEnergy(int row, int col)
     {
         int N = params.latticeSize;
+        int idx = index(row, col);
+        int spin = lattice[idx].spin;
 
-        int spin = lattice[row][col].spin;
-
-        int up    = lattice[(row - 1 + N) % N][col].spin;
-        int down  = lattice[(row + 1) % N][col].spin;
-        int left  = lattice[row][(col - 1 + N) % N].spin;
-        int right = lattice[row][(col + 1) % N].spin;
+        int up = lattice[index((row - 1 + N) % N, col)].spin;
+        int down = lattice[index((row + 1) % N, col)].spin;
+        int left = lattice[index(row, (col - 1 + N) % N)].spin;
+        int right = lattice[index(row, (col + 1) % N)].spin;
 
         int neighbourSum = up + down + left + right;
 
@@ -150,23 +154,18 @@ public:
     void metropolisUpdate(int row, int col)
     {
         int N = params.latticeSize;
-
-        int spin = lattice[row][col].spin;
-
+        int idx = index(row, col);
+        int spin = lattice[idx].spin;
         int up =
-            lattice[(row - 1 + N) % N][col].spin;
+    lattice[index((row - 1 + N) % N, col)].spin;
 
-        int down =
-            lattice[(row + 1) % N][col].spin;
+        int down = lattice[index((row + 1) % N, col)].spin;
 
-        int left =
-            lattice[row][(col - 1 + N) % N].spin;
+        int left = lattice[index(row, (col - 1 + N) % N)].spin;
 
-        int right =
-            lattice[row][(col + 1) % N].spin;
+        int right = lattice[index(row, (col + 1) % N)].spin;
 
-        int neighbourSum =
-            up + down + left + right;
+        int neighbourSum = up + down + left + right;
 
         double deltaEnergy =
             2.0 *
@@ -178,14 +177,11 @@ public:
                 params.magneticField
             );
 
-        double random =
-            RandomGenerator::uniform(
-                rngStates[row][col].state
-            );
+        double random = RandomGenerator::uniform(rngStates[idx].state);
 
         if (deltaEnergy <= 0)
         {
-            lattice[row][col].flip();
+            lattice[idx].flip();
         }
         else
         {
@@ -194,7 +190,7 @@ public:
 
             if (random <= probability)
             {
-                lattice[row][col].flip();
+                lattice[idx].flip();
             }
         }
     }
@@ -262,7 +258,9 @@ public:
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
-                totalSpin += lattice[i][j].spin;
+                int idx = index(i, j);
+
+                totalSpin += lattice[idx].spin;
             }
         }
 
@@ -278,7 +276,7 @@ public:
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
-                cout << lattice[i][j].spin << " ";
+                cout << lattice[index(i,j)].spin << " ";
             }
             cout << endl;
         }
@@ -296,7 +294,7 @@ public:
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
-                fout << lattice[i][j].spin << " ";
+                fout << lattice[index(i,j)].spin << " ";
             }
 
             fout << endl;
@@ -306,7 +304,7 @@ public:
 
         fout.close();
     }
-    const vector<vector<Particle>>& getLattice() const
+    const vector<Particle>& getLattice() const
     {
         return lattice;
     } // getter

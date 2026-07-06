@@ -21,9 +21,14 @@ class Visualizer
 private:
     static constexpr int SCALE = 8;
 
+    static inline int index(int row, int col, int N)
+    {
+        return row * N + col;
+    }
+
     static void drawLattice(
         Mat& image,
-        const vector<vector<Particle>>& lattice,
+        const vector<Particle>& lattice,
         int latticeSize,
         int scale)
     {
@@ -33,7 +38,9 @@ private:
             {
                 Scalar color;
 
-                if (lattice[i][j].spin == 1)
+                int idx = index(i, j, latticeSize);
+
+                if (lattice[idx].spin == 1)
                     color = Scalar(255,255,255);
                 else
                     color = Scalar(0,0,0);
@@ -52,7 +59,7 @@ private:
 public:
 
     static void saveImage(
-        const vector<vector<Particle>>& lattice,
+        const vector<Particle>& lattice,
         const SimulationParameters& params,
         double energy,
         double magnetization,
@@ -179,7 +186,7 @@ public:
     }
 
     static void saveFrame(
-        const vector<vector<Particle>>& lattice,
+        const vector<Particle>& lattice,
         const SimulationParameters& params,
         int runNumber,
         int step)
