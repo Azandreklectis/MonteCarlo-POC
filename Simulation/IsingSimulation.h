@@ -7,6 +7,7 @@
 
 #include "../Entities/Particle.h"
 #include "../SimulationParameters/SimulationParameters.h"
+#include "../Utilities/RandomGenerator.h"
 
 using namespace std;
 
@@ -16,13 +17,15 @@ private:
 
     vector<vector<Particle>> lattice;
     SimulationParameters params;
-    mt19937 gen;
-
+    RNGState rng;
+    //random_device{}()
 public:
 
     IsingSimulation(const SimulationParameters& params)
-        : params(params), gen(random_device{}())
+    : params(params)
     {
+        rng.state = random_device{}();
+
         lattice.resize(
             params.latticeSize,
             vector<Particle>(params.latticeSize)
@@ -31,18 +34,29 @@ public:
         initialize();
     }
 
+
     void initialize()
     {
-        uniform_int_distribution<> spinDist(0, 1);
-
         for (int i = 0; i < params.latticeSize; i++)
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
-                lattice[i][j].spin =
-                    (spinDist(gen) == 0) ? -1 : 1;
+                lattice[i][j].spin =(RandomGenerator::uniform(rng.state) < 0.5) ? -1 : 1;
             }
         }
+    }
+    
+    bool acceptMove(double deltaEnergy, double random)
+    {
+        if (deltaEnergy <= 0)
+        {
+            return true;
+        }
+
+        double probability =
+            exp(-deltaEnergy / params.temperature);
+
+        return random <= probability;
     }
 
     double localEnergy(int row, int col)
@@ -65,6 +79,7 @@ public:
     {
         double energy = 0;
 
+        #pragma acc parallel loop collapse(2) reduction(+:energy)
         for (int i = 0; i < params.latticeSize; i++)
         {
             for (int j = 0; j < params.latticeSize; j++)
@@ -73,7 +88,7 @@ public:
             }
         }
 
-        return energy/2 ;
+        return energy / 2.0;
     }
     // serial waala part
     // void metropolisStep()
@@ -110,7 +125,7 @@ public:
     // parallel waala part
     void metropolisUpdate(int row, int col)
     {
-        uniform_real_distribution<> probabilityDist(0.0, 1.0);
+        double random = RandomGenerator::uniform(rng.state);
 
         double oldEnergy = localEnergy(row, col);
 
@@ -120,42 +135,36 @@ public:
 
         double deltaEnergy = newEnergy - oldEnergy;
 
-        if (deltaEnergy <= 0)
-        {
-            return;
-        }
-
-        double probability =
-            exp(-deltaEnergy / params.temperature);
-
-        if (probabilityDist(gen) > probability)
+        if (!acceptMove(deltaEnergy, random))
         {
             lattice[row][col].flip();
         }
     }
     void updateBlack()
     {
-        for (int row = 0; row < params.latticeSize; row++)
+        int N = params.latticeSize;
+
+        for (int row = 0; row < N; row++)
         {
-            for (int col = 0; col < params.latticeSize; col++)
+            int startCol = row % 2;
+
+            for (int col = startCol; col < N; col += 2)
             {
-                if ((row + col) % 2 == 0)
-                {
-                    metropolisUpdate(row, col);
-                }
+                metropolisUpdate(row, col);
             }
         }
     }
     void updateWhite()
     {
-        for (int row = 0; row < params.latticeSize; row++)
+        int N = params.latticeSize;
+
+        for (int row = 0; row < N; row++)
         {
-            for (int col = 0; col < params.latticeSize; col++)
+            int startCol = (row + 1) % 2;
+
+            for (int col = startCol; col < N; col += 2)
             {
-                if ((row + col) % 2 == 1)
-                {
-                    metropolisUpdate(row, col);
-                }
+                metropolisUpdate(row, col);
             }
         }
     }
@@ -185,6 +194,7 @@ public:
     {
         int totalSpin = 0;
 
+        #pragma acc parallel loop collapse(2) reduction(+:totalSpin)
         for (int i = 0; i < params.latticeSize; i++)
         {
             for (int j = 0; j < params.latticeSize; j++)

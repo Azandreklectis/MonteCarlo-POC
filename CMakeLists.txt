@@ -15,6 +15,7 @@ add_executable(OpenACC_Test
         Dataset/DatasetWriter.h
         GIF/gif.h
         GIF/GIFGenerator.h
+        Utilities/RandomGenerator.h
 )
 target_include_directories(OpenACC_Test PRIVATE
         indicators/include
