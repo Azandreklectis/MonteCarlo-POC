@@ -17,19 +17,35 @@ private:
 
     vector<vector<Particle>> lattice;
     SimulationParameters params;
-    RNGState rng;
+    vector<vector<RNGState>> rngStates;
     //random_device{}()
 public:
 
     IsingSimulation(const SimulationParameters& params)
     : params(params)
     {
-        rng.state = random_device{}();
-
+        // Allocate lattice
         lattice.resize(
             params.latticeSize,
             vector<Particle>(params.latticeSize)
         );
+
+        // Allocate one RNG state per lattice site
+        rngStates.resize(
+            params.latticeSize,
+            vector<RNGState>(params.latticeSize)
+        );
+
+        unsigned int seed = random_device{}();
+
+        for (int i = 0; i < params.latticeSize; i++)
+        {
+            for (int j = 0; j < params.latticeSize; j++)
+            {
+                rngStates[i][j].state =
+                    seed + i * params.latticeSize + j;
+            }
+        }
 
         initialize();
     }
@@ -41,11 +57,14 @@ public:
         {
             for (int j = 0; j < params.latticeSize; j++)
             {
-                lattice[i][j].spin =(RandomGenerator::uniform(rng.state) < 0.5) ? -1 : 1;
+                double random =RandomGenerator::uniform(rngStates[i][j].state);
+
+                lattice[i][j].spin =
+                    (random < 0.5) ? -1 : 1;
             }
         }
     }
-    
+
     bool acceptMove(double deltaEnergy, double random)
     {
         if (deltaEnergy <= 0)
@@ -123,23 +142,66 @@ public:
     // }
 
     // parallel waala part
+    // void metropolisUpdate(int row, int col)
+    // {
+    //     double random = RandomGenerator::uniform(rngStates[row][col].state);
+    //
+    //     double oldEnergy = localEnergy(row, col);
+    //
+    //     lattice[row][col].flip();
+    //
+    //     double newEnergy = localEnergy(row, col);
+    //
+    //     double deltaEnergy = newEnergy - oldEnergy;
+    //
+    //     if (!acceptMove(deltaEnergy, random))
+    //     {
+    //         lattice[row][col].flip();
+    //     }
+    // }
+
     void metropolisUpdate(int row, int col)
     {
-        double random = RandomGenerator::uniform(rng.state);
+        int N = params.latticeSize;
 
-        double oldEnergy = localEnergy(row, col);
+        int spin = lattice[row][col].spin;
 
-        lattice[row][col].flip();
+        int up =
+            lattice[(row - 1 + N) % N][col].spin;
 
-        double newEnergy = localEnergy(row, col);
+        int down =
+            lattice[(row + 1) % N][col].spin;
 
-        double deltaEnergy = newEnergy - oldEnergy;
+        int left =
+            lattice[row][(col - 1 + N) % N].spin;
 
-        if (!acceptMove(deltaEnergy, random))
+        int right =
+            lattice[row][(col + 1) % N].spin;
+
+        int neighbourSum =
+            up + down + left + right;
+
+        double deltaEnergy =
+            2.0 *
+            spin *
+            (
+                params.couplingConstant *
+                neighbourSum
+                +
+                params.magneticField
+            );
+
+        double random =
+            RandomGenerator::uniform(
+                rngStates[row][col].state
+            );
+
+        if (acceptMove(deltaEnergy, random))
         {
             lattice[row][col].flip();
         }
     }
+    
     void updateBlack()
     {
         int N = params.latticeSize;
@@ -148,8 +210,10 @@ public:
         {
             int startCol = row % 2;
 
-            for (int col = startCol; col < N; col += 2)
+            for (int k = 0; k < N / 2; k++)
             {
+                int col = startCol + 2 * k;
+
                 metropolisUpdate(row, col);
             }
         }
@@ -162,8 +226,10 @@ public:
         {
             int startCol = (row + 1) % 2;
 
-            for (int col = startCol; col < N; col += 2)
+            for (int k = 0; k < N / 2; k++)
             {
+                int col = startCol + 2 * k;
+
                 metropolisUpdate(row, col);
             }
         }

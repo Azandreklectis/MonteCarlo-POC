@@ -3,6 +3,8 @@
 struct RNGState
 {
     unsigned int state;
+
+
 };
 
 class RandomGenerator
