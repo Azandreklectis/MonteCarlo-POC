@@ -15,6 +15,11 @@ class IsingSimulation
 {
 private:
 
+    vector<int> up;
+    vector<int> down;
+    vector<int> left;
+    vector<int> right;
+
     vector<Particle> lattice;
     vector<RNGState> rngStates;
     SimulationParameters params;
@@ -26,9 +31,43 @@ private:
     }
 public:
 
+    void enterDeviceData()
+    {
+
+    }
+
+    void exitDeviceData()
+    {
+
+    }
+
+    void updateHostLattice()
+    {
+
+    }
+
     IsingSimulation(const SimulationParameters& params)
     : params(params)
     {
+
+        up.resize(params.latticeSize);
+        down.resize(params.latticeSize);
+        left.resize(params.latticeSize);
+        right.resize(params.latticeSize);
+
+        int N = params.latticeSize;
+
+        for (int i = 0; i < N; i++)
+        {
+            up[i] = (i - 1 + N) % N;
+
+            down[i] = (i + 1) % N;
+
+            left[i] = (i - 1 + N) % N;
+
+            right[i] = (i + 1) % N;
+        }
+
         int totalParticles =
             params.latticeSize * params.latticeSize;
 
@@ -75,12 +114,12 @@ public:
         int idx = index(row, col);
         int spin = lattice[idx].spin;
 
-        int up = lattice[index((row - 1 + N) % N, col)].spin;
-        int down = lattice[index((row + 1) % N, col)].spin;
-        int left = lattice[index(row, (col - 1 + N) % N)].spin;
-        int right = lattice[index(row, (col + 1) % N)].spin;
+        int upSpin = lattice[index(up[row], col)].spin;
+        int downSpin = lattice[index(down[row], col)].spin;
+        int leftSpin = lattice[index(row, left[col])].spin;
+        int rightSpin =lattice[index(row, right[col])].spin;
 
-        int neighbourSum = up + down + left + right;
+        int neighbourSum = upSpin + downSpin + leftSpin + rightSpin;
 
         return -params.couplingConstant * spin * neighbourSum
                -params.magneticField * spin;
@@ -156,16 +195,12 @@ public:
         int N = params.latticeSize;
         int idx = index(row, col);
         int spin = lattice[idx].spin;
-        int up =
-    lattice[index((row - 1 + N) % N, col)].spin;
+        int upSpin = lattice[index(up[row], col)].spin;
+        int downSpin = lattice[index(down[row], col)].spin;
+        int leftSpin = lattice[index(row, left[col])].spin;
+        int rightSpin =lattice[index(row, right[col])].spin;
 
-        int down = lattice[index((row + 1) % N, col)].spin;
-
-        int left = lattice[index(row, (col - 1 + N) % N)].spin;
-
-        int right = lattice[index(row, (col + 1) % N)].spin;
-
-        int neighbourSum = up + down + left + right;
+        int neighbourSum = upSpin + downSpin + leftSpin + rightSpin;
 
         double deltaEnergy =
             2.0 *

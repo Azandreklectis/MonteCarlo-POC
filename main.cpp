@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <omp.h>
 
 #include "SimulationParameters/SimulationParameters.h"
 #include "Simulation/IsingSimulation.h"
@@ -28,6 +29,7 @@ int main()
 
     auto totalStart = high_resolution_clock::now();
 
+    //#pragma omp parallel for schedule(static)
     for (int run = 1; run <= totalRuns; run++)
     {
         cout << "\n=====================================================\n";
@@ -87,6 +89,7 @@ int main()
                 simulationEnd - simulationStart
             );
 
+        //#pragma omp atomic
         totalSimulationTime += simulationTime.count();
 
         cout << "Monte Carlo Simulation Finished ("
@@ -174,14 +177,23 @@ int main()
         cout << "Dataset Writing Started...\n";
 
         auto datasetStart = high_resolution_clock::now();
-
+        // #pragma omp critical
+        // {
+        //     DatasetWriter::append(
+        //         run,
+        //         "run_" + to_string(run) + ".png",
+        //         params,
+        //         energy,
+        //         magnetization
+        //     );
+        // }
         DatasetWriter::append(
-            run,
-            "run_" + to_string(run) + ".png",
-            params,
-            energy,
-            magnetization
-        );
+               run,
+               "run_" + to_string(run) + ".png",
+               params,
+               energy,
+               magnetization
+           );
 
         auto datasetEnd = high_resolution_clock::now();
 
