@@ -17,7 +17,7 @@ int main()
     IsingSimulation simulation(params);
 
     //OwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwO
-    int totalRuns = 5;
+    int totalRuns = 1;
     int frameInterval = 1;
     //OwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwO issko change karna hai
 

@@ -20,6 +20,8 @@ private:
     vector<int> left;
     vector<int> right;
 
+    unsigned int sweepState;
+
     vector<Particle> lattice;
     vector<RNGState> rngStates;
     SimulationParameters params;
@@ -56,6 +58,9 @@ public:
         right.resize(params.latticeSize);
 
         int N = params.latticeSize;
+        unsigned int seed = random_device{}();
+
+        sweepState = seed ^ 0x9E3779B9u;
 
         for (int i = 0; i < N; i++)
         {
@@ -74,7 +79,7 @@ public:
         lattice.resize(totalParticles);
         rngStates.resize(totalParticles);
 
-        unsigned int seed = random_device{}();
+
 
         for (int i = 0; i < params.latticeSize; i++)
         {
@@ -277,11 +282,27 @@ public:
     //     }
     // }
 
+    // void monteCarloStep()
+    // {
+    //     updateBlack();
+    //
+    //     updateWhite();
+    // }
     void monteCarloStep()
     {
-        updateBlack();
+        bool blackFirst =
+            RandomGenerator::uniform(sweepState) < 0.5;
 
-        updateWhite();
+        if (blackFirst)
+        {
+            updateBlack();
+            updateWhite();
+        }
+        else
+        {
+            updateWhite();
+            updateBlack();
+        }
     }
 
     double magnetization()
