@@ -16,6 +16,9 @@ add_executable(OpenACC_Test
         GIF/gif.h
         GIF/GIFGenerator.h
 )
+target_include_directories(OpenACC_Test PRIVATE
+        indicators/include
+)
 
 target_link_libraries(OpenACC_Test PRIVATE
         ${OpenCV_LIBS}

@@ -15,7 +15,7 @@ public:
         double temperature = 2.5,
         double magneticField = 0.0,
         double couplingConstant = 1.0,
-        int monteCarloSteps = 10000
+        int monteCarloSteps = 250
     )
         : latticeSize(latticeSize),
           temperature(temperature),
