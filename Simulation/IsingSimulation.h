@@ -75,14 +75,42 @@ public:
 
         return energy/2 ;
     }
+    // serial waala part
+    // void metropolisStep()
+    // {
+    //     uniform_int_distribution<> indexDist(0, params.latticeSize - 1);
+    //     uniform_real_distribution<> probabilityDist(0.0, 1.0);
+    //
+    //     int row = indexDist(gen);
+    //     int col = indexDist(gen);
+    //
+    //     double oldEnergy = localEnergy(row, col);
+    //
+    //     lattice[row][col].flip();
+    //
+    //     double newEnergy = localEnergy(row, col);
+    //
+    //     double deltaEnergy = newEnergy - oldEnergy;
+    //
+    //     if (deltaEnergy <= 0)
+    //     {
+    //         return;
+    //     }
+    //
+    //     double probability =
+    //         exp(-deltaEnergy / params.temperature);
+    //
+    //     if (probabilityDist(gen) > probability)
+    //     {
+    //         // Reject the flip
+    //         lattice[row][col].flip();
+    //     }
+    // }
 
-    void metropolisStep()
+    // parallel waala part
+    void metropolisUpdate(int row, int col)
     {
-        uniform_int_distribution<> indexDist(0, params.latticeSize - 1);
         uniform_real_distribution<> probabilityDist(0.0, 1.0);
-
-        int row = indexDist(gen);
-        int col = indexDist(gen);
 
         double oldEnergy = localEnergy(row, col);
 
@@ -102,8 +130,33 @@ public:
 
         if (probabilityDist(gen) > probability)
         {
-            // Reject the flip
             lattice[row][col].flip();
+        }
+    }
+    void updateBlack()
+    {
+        for (int row = 0; row < params.latticeSize; row++)
+        {
+            for (int col = 0; col < params.latticeSize; col++)
+            {
+                if ((row + col) % 2 == 0)
+                {
+                    metropolisUpdate(row, col);
+                }
+            }
+        }
+    }
+    void updateWhite()
+    {
+        for (int row = 0; row < params.latticeSize; row++)
+        {
+            for (int col = 0; col < params.latticeSize; col++)
+            {
+                if ((row + col) % 2 == 1)
+                {
+                    metropolisUpdate(row, col);
+                }
+            }
         }
     }
 
@@ -123,13 +176,9 @@ public:
 
     void monteCarloStep()
     {
-        int totalParticles =
-            params.latticeSize * params.latticeSize;
+        updateBlack();
 
-        for (int i = 0; i < totalParticles; i++)
-        {
-            metropolisStep();
-        }
+        updateWhite();
     }
 
     double magnetization()
