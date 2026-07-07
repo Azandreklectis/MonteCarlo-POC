@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <omp.h>
+#include <openacc.h>
 
 #include "SimulationParameters/SimulationParameters.h"
 #include "Simulation/IsingSimulation.h"
@@ -18,7 +19,6 @@ int main()
     SimulationParameters params;
     IsingSimulation simulation(params);
 
-#include <openacc.h>
 
     cout << "Host devices      : "
          << acc_get_num_devices(acc_device_host)
@@ -129,7 +129,7 @@ int main()
         double energy = simulation.totalEnergy();
         double magnetization = simulation.magnetization();
 
-        simulation.printResults();
+       // simulation.printResults();
 
         cout << "\nSimulation Statistics\n";
         cout << "----------------------------------------\n";
@@ -215,7 +215,7 @@ int main()
         // }
         DatasetWriter::append(
                run,
-               "run_" + to_string(run) + ".png",
+               "not generated",
                params,
                energy,
                magnetization
