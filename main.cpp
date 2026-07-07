@@ -7,6 +7,8 @@
 #include "Visualizer/Visualizer.h"
 #include "Dataset/DatasetWriter.h"
 #include "GIF/GIFGenerator.h"
+#include <openacc.h>
+
 
 using namespace std;
 using namespace std::chrono;
@@ -16,6 +18,23 @@ int main()
     SimulationParameters params;
     IsingSimulation simulation(params);
 
+#include <openacc.h>
+
+    cout << "Host devices      : "
+         << acc_get_num_devices(acc_device_host)
+         << endl;
+
+    cout << "NVIDIA devices   : "
+         << acc_get_num_devices(acc_device_nvidia)
+         << endl;
+
+    cout << "Radeon devices   : "
+         << acc_get_num_devices(acc_device_radeon)
+         << endl;
+
+    cout << "Current device   : "
+         << acc_get_device_type()
+         << endl;
     //OwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwO
     int totalRuns = 1;
     int frameInterval = 1;
@@ -70,6 +89,13 @@ int main()
         for (int step = 0; step < params.monteCarloSteps; step++)
         {
             simulation.monteCarloStep();
+
+            cout << "\rSweep "
+                << step + 1
+                << " / "
+                << params.monteCarloSteps;
+
+            cout.flush();
 
             if (step % frameInterval == 0)
             {

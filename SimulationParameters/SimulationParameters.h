@@ -11,11 +11,11 @@ public:
     int monteCarloSteps;
 
     SimulationParameters(
-        int latticeSize = 200,
+        int latticeSize = 1000,
         double temperature = 2.5,
         double magneticField = 0.0,
         double couplingConstant = 1.0,
-        int monteCarloSteps = 1000
+        int monteCarloSteps = 500
     )
         : latticeSize(latticeSize),
           temperature(temperature),
