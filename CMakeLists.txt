@@ -4,28 +4,21 @@ project(OpenACC_Test)
 
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(OpenCV REQUIRED)
-
 add_executable(OpenACC_Test
         main.cpp
         Entities/Particle.h
         SimulationParameters/SimulationParameters.h
         Simulation/IsingSimulation.h
-        Visualizer/Visualizer.h
         Dataset/DatasetWriter.h
-        GIF/gif.h
-        GIF/GIFGenerator.h
         Utilities/RandomGenerator.h
 )
+
 target_compile_options(OpenACC_Test PRIVATE
-        -fopenacc
+        -acc
         -O3
-        -fopt-info-omp
+        -Minfo=accel
 )
 
-target_link_libraries(OpenACC_Test PRIVATE
-        ${OpenCV_LIBS}
-        gomp
+target_link_options(OpenACC_Test PRIVATE
+        -acc
 )
-
-target_compile_options(OpenACC_Test PRIVATE -fopenacc)
