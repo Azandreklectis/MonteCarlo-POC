@@ -4,9 +4,9 @@
 
 #include "SimulationParameters/SimulationParameters.h"
 #include "Simulation/IsingSimulation.h"
-#include "Visualizer/Visualizer.h"
+//#include "Visualizer/Visualizer.h"
 #include "Dataset/DatasetWriter.h"
-#include "GIF/GIFGenerator.h"
+//#include "GIF/GIFGenerator.h"
 #include <openacc.h>
 
 
@@ -97,15 +97,15 @@ int main()
 
             cout.flush();
 
-            if (step % frameInterval == 0)
-            {
-                Visualizer::saveFrame(
-                    simulation.getLattice(),
-                    params,
-                    run,
-                    step
-                );
-            }
+            // if (step % frameInterval == 0)
+            // {
+            //     Visualizer::saveFrame(
+            //         simulation.getLattice(),
+            //         params,
+            //         run,
+            //         step
+            //     );
+            // }
         }
 
         auto simulationEnd = high_resolution_clock::now();
@@ -142,59 +142,59 @@ int main()
         //---------------------------------------------------
         // Final Image
         //---------------------------------------------------
-
-        cout << "Final Image Generation Started...\n";
-
-        auto imageStart = high_resolution_clock::now();
-
-        Visualizer::saveImage(
-            simulation.getLattice(),
-            params,
-            energy,
-            magnetization,
-            run
-        );
-
-        auto imageEnd = high_resolution_clock::now();
-
-        auto imageTime =
-            duration_cast<milliseconds>(
-                imageEnd - imageStart
-            );
-
-        totalImageTime += imageTime.count();
-
-        cout << "Final Image Generation Finished ("
-             << imageTime.count()
-             << " ms)\n\n";
+        //
+        // cout << "Final Image Generation Started...\n";
+        //
+        // auto imageStart = high_resolution_clock::now();
+        // //
+        // // Visualizer::saveImage(
+        // //     simulation.getLattice(),
+        // //     params,
+        // //     energy,
+        // //     magnetization,
+        // //     run
+        // // );
+        //
+        // auto imageEnd = high_resolution_clock::now();
+        //
+        // auto imageTime =
+        //     duration_cast<milliseconds>(
+        //         imageEnd - imageStart
+        //     );
+        //
+        // totalImageTime += imageTime.count();
+        //
+        // cout << "Final Image Generation Finished ("
+        //      << imageTime.count()
+        //      << " ms)\n\n";
 
         //---------------------------------------------------
         // GIF Generation
         //---------------------------------------------------
-
-        cout << "GIF Generation Started...\n";
-
-        auto gifStart = high_resolution_clock::now();
-
-        GIFGenerator::createGIF(
-            run,
-            params.latticeSize * 8,
-            params.latticeSize * 8 + 40,
-            frameInterval
-        );
-
-        auto gifEnd = high_resolution_clock::now();
-
-        auto gifTime =
-            duration_cast<milliseconds>(
-                gifEnd - gifStart
-            );
-
-        totalGIFTime += gifTime.count();
-
-        cout << "GIF Generation Finished ("
-             << gifTime.count()
-             << " ms)\n\n";
+        //
+        // cout << "GIF Generation Started...\n";
+        //
+        // auto gifStart = high_resolution_clock::now();
+        //
+        // GIFGenerator::createGIF(
+        //     run,
+        //     params.latticeSize * 8,
+        //     params.latticeSize * 8 + 40,
+        //     frameInterval
+        // );
+        //
+        // auto gifEnd = high_resolution_clock::now();
+        //
+        // auto gifTime =
+        //     duration_cast<milliseconds>(
+        //         gifEnd - gifStart
+        //     );
+        //
+        // totalGIFTime += gifTime.count();
+        //
+        // cout << "GIF Generation Finished ("
+        //      << gifTime.count()
+        //      << " ms)\n\n";
 
         //---------------------------------------------------
         // Dataset Writing
@@ -251,8 +251,8 @@ int main()
 
         cout << "Initialization : " << initTime.count() << " ms\n";
         cout << "Simulation     : " << simulationTime.count() << " ms\n";
-        cout << "Image          : " << imageTime.count() << " ms\n";
-        cout << "GIF            : " << gifTime.count() << " ms\n";
+        //cout << "Image          : " << imageTime.count() << " ms\n";
+       // cout << "GIF            : " << gifTime.count() << " ms\n";
         cout << "Dataset        : " << datasetTime.count() << " ms\n";
         cout << "----------------------------------------\n";
         cout << "Total Run Time : " << runTime.count() << " ms\n\n";
