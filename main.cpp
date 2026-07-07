@@ -8,7 +8,6 @@
 //#include "Visualizer/Visualizer.h"
 #include "Dataset/DatasetWriter.h"
 //#include "GIF/GIFGenerator.h"
-#include <openacc.h>
 
 
 using namespace std;
@@ -19,31 +18,66 @@ int main()
     SimulationParameters params;
     IsingSimulation simulation(params);
 
-
-    cout << "Host devices      : "
-         << acc_get_num_devices(acc_device_host)
-         << endl;
-
-    cout << "NVIDIA devices   : "
-         << acc_get_num_devices(acc_device_nvidia)
-         << endl;
-
-    cout << "Radeon devices   : "
-         << acc_get_num_devices(acc_device_radeon)
-         << endl;
-
-    cout << "Current device   : "
-         << acc_get_device_type()
-         << endl;
-    //OwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwO
     int totalRuns = 1;
     int frameInterval = 1;
+
+    cout << "=====================================================\n";
+    cout << "        Monte Carlo Ising Model - HPC Build\n";
+    cout << "=====================================================\n\n";
+
+    cout << "Compiler          : NVIDIA HPC SDK\n";
+    cout << "Parallel Backend  : OpenACC\n";
+    cout << "Simulation Type   : Checkerboard Metropolis\n\n";
+
+    cout << "Host devices      : "
+         << acc_get_num_devices(acc_device_host) << endl;
+
+    cout << "NVIDIA devices    : "
+         << acc_get_num_devices(acc_device_nvidia) << endl;
+
+    cout << "Radeon devices    : "
+         << acc_get_num_devices(acc_device_radeon) << endl;
+
+    auto device = acc_get_device_type();
+
+    cout << "Current device    : ";
+
+    switch(device)
+    {
+        case acc_device_host:
+            cout << "HOST";
+            break;
+
+        case acc_device_nvidia:
+            cout << "NVIDIA";
+            break;
+
+        case acc_device_radeon:
+            cout << "RADEON";
+            break;
+
+        default:
+            cout << "UNKNOWN (" << device << ")";
+    }
+
+    cout << "\n\n";
+
+    cout << "=============================================\n";
+    cout << "Benchmark Configuration\n";
+    cout << "=============================================\n";
+
+    cout << "Lattice Size       : " << params.latticeSize << endl;
+    cout << "Monte Carlo Steps  : " << params.monteCarloSteps << endl;
+    cout << "Temperature        : " << params.temperature << endl;
+    cout << "Magnetic Field     : " << params.magneticField << endl;
+    cout << "Total Runs         : " << totalRuns << endl;
+    cout << "Frame Interval     : " << frameInterval << endl << endl;
     //OwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwOwO issko change karna hai
 
     long long totalInitializationTime = 0;
     long long totalSimulationTime = 0;
-    long long totalImageTime = 0;
-    long long totalGIFTime = 0;
+    long long totalEnergyTime = 0;
+    long long totalMagnetizationTime = 0;
     long long totalDatasetTime = 0;
 
     auto totalStart = high_resolution_clock::now();
@@ -126,8 +160,24 @@ int main()
         // Compute Statistics
         //---------------------------------------------------
 
+        auto energyStart = high_resolution_clock::now();
         double energy = simulation.totalEnergy();
+        auto energyEnd = high_resolution_clock::now();
+
+        auto energyTime =
+            duration_cast<milliseconds>(energyEnd - energyStart);
+        totalEnergyTime += energyTime.count();
+
+        auto magnetizationStart = high_resolution_clock::now();
         double magnetization = simulation.magnetization();
+        auto magnetizationEnd = high_resolution_clock::now();
+
+        auto magnetizationTime =
+            duration_cast<milliseconds>(
+                magnetizationEnd - magnetizationStart
+            );
+        totalMagnetizationTime += magnetizationTime.count();
+
 
        // simulation.printResults();
 
@@ -251,6 +301,8 @@ int main()
 
         cout << "Initialization : " << initTime.count() << " ms\n";
         cout << "Simulation     : " << simulationTime.count() << " ms\n";
+        cout << "Energy         : " << energyTime.count() << " ms\n";
+        cout << "Magnetization  : " << magnetizationTime.count() << " ms\n";
         //cout << "Image          : " << imageTime.count() << " ms\n";
        // cout << "GIF            : " << gifTime.count() << " ms\n";
         cout << "Dataset        : " << datasetTime.count() << " ms\n";
@@ -273,10 +325,16 @@ int main()
     cout << "Total Time             : " << totalTime.count() << " ms\n";
     cout << "Average Initialization : " << totalInitializationTime / totalRuns << " ms\n";
     cout << "Average Simulation     : " << totalSimulationTime / totalRuns << " ms\n";
-    cout << "Average Image          : " << totalImageTime / totalRuns << " ms\n";
-    cout << "Average GIF            : " << totalGIFTime / totalRuns << " ms\n";
+    // cout << "Average Image          : " << totalImageTime / totalRuns << " ms\n";
+    // cout << "Average GIF            : " << totalGIFTime / totalRuns << " ms\n";
     cout << "Average Dataset        : " << totalDatasetTime / totalRuns << " ms\n";
+    cout << "Average Energy         : "
+     << totalEnergyTime / totalRuns
+     << " ms\n";
 
+    cout << "Average Magnetization  : "
+         << totalMagnetizationTime / totalRuns
+         << " ms\n";
     cout << "=====================================================\n";
 
     return 0;
