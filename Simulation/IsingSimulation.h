@@ -97,6 +97,7 @@ public:
 
     void initialize()
     {
+        //temp OFF
         //#pragma acc parallel loop collapse(2)
         for (int i = 0; i < params.latticeSize; i++)
         {
