@@ -15,8 +15,8 @@ add_executable(OpenACC_Test
 
 target_compile_options(OpenACC_Test PRIVATE
         -acc
-        -O3
         -Minfo=accel
+        -gpu=debug
 )
 
 target_link_options(OpenACC_Test PRIVATE
