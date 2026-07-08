@@ -35,9 +35,6 @@ int main()
     cout << "NVIDIA devices    : "
          << acc_get_num_devices(acc_device_nvidia) << endl;
 
-    cout << "Radeon devices    : "
-         << acc_get_num_devices(acc_device_radeon) << endl;
-
     auto device = acc_get_device_type();
 
     cout << "Current device    : ";
@@ -51,11 +48,7 @@ int main()
         case acc_device_nvidia:
             cout << "NVIDIA";
             break;
-
-        case acc_device_radeon:
-            cout << "RADEON";
-            break;
-
+        
         default:
             cout << "UNKNOWN (" << device << ")";
     }

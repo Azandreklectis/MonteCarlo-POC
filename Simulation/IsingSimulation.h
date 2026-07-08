@@ -35,7 +35,18 @@ public:
 
     void enterDeviceData()
     {
+        int N = params.latticeSize;
+        int totalParticles = N * N;
 
+        #pragma acc enter data copyin(this)
+
+        #pragma acc enter data copyin( \
+        lattice[0:totalParticles], \
+        rngStates[0:totalParticles], \
+        up[0:N], \
+        down[0:N], \
+        left[0:N], \
+        right[0:N] )
     }
 
     void exitDeviceData()
@@ -90,14 +101,15 @@ public:
                 rngStates[idx].state = seed + idx;
             }
         }
-
+        enterDeviceData();
         initialize();
     }
 
 
     void initialize()
     {
-        #pragma acc parallel loop collapse(2)
+        //temp OFF
+        //#pragma acc parallel loop collapse(2)
         for (int i = 0; i < params.latticeSize; i++)
         {
             for (int j = 0; j < params.latticeSize; j++)
