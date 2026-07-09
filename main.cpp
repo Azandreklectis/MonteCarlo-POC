@@ -5,19 +5,24 @@ using namespace std;
 
 int main()
 {
-    cout << "========== OpenACC Playground ==========\n";
+     const int N = 16;
 
-    cout << "Host Devices    : "
-         << acc_get_num_devices(acc_device_host)
-         << endl;
+     int a[N];
 
-    cout << "NVIDIA Devices  : "
-         << acc_get_num_devices(acc_device_nvidia)
-         << endl;
+#pragma acc parallel loop
+     for (int i = 0; i < N; i++)
+     {
+          a[i] = i * i;
+     }
 
-    cout << "Current Device  : "
-         << acc_get_device_type()
-         << endl;
+     cout << "Array:\n";
 
-    return 0;
+     for (int i = 0; i < N; i++)
+     {
+          cout << a[i] << " ";
+     }
+
+     cout << endl;
+
+     return 0;
 }
