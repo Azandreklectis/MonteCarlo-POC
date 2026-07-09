@@ -12,6 +12,8 @@ echo
 
 source /home/apps/SPACK/spack/share/spack/setup-env.sh
 
+spack load gcc@12.4.0/tw5zw6s
+
 #--------------------------------------------------
 # Load Compiler
 #--------------------------------------------------
