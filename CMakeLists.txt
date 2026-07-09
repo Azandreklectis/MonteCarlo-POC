@@ -11,6 +11,7 @@ add_executable(OpenACC_Test
         Simulation/IsingSimulation.h
         Dataset/DatasetWriter.h
         Utilities/RandomGenerator.h
+        OpenACC-Playground/main.cpp
 )
 
 target_compile_options(OpenACC_Test PRIVATE
