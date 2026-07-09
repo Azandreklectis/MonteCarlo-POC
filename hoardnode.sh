@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=hoardnode
+#SBATCH --job-name=hoardnode.sh
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=08:00:00
-#SBATCH --output=hoardnode.%j.out
-#SBATCH --error=hoardnode.%j.err
+#SBATCH --output=hoardnode.sh.%j.out
+#SBATCH --error=hoardnode.sh.%j.err
 
 source setup_hpc.sh
 
