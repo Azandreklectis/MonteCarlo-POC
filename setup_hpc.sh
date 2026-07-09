@@ -12,24 +12,17 @@ echo
 
 source /home/apps/SPACK/spack/share/spack/setup-env.sh
 
-spack load gcc@12.4.0/tw5zw6s
-
 #--------------------------------------------------
-# Load Compiler
+# Load GCC (required runtime)
 #--------------------------------------------------
 
-#module load compiler/gcc/12.4
+spack load /xaaaxgt
 
 #--------------------------------------------------
 # Load NVIDIA HPC SDK
 #--------------------------------------------------
 
 spack load nvhpc@24.3
-
-# Use GCC 14 runtime (needed for GLIBCXX_3.4.32)
-#export GCC14_LIB=/home/apps/SPACK/spack/opt/spack/linux-cascadelake/gcc-runtime-14.2.0-xcctgudktzfgj5j7ihktrh4mzwou3quw/lib
-#
-#export LD_LIBRARY_PATH=$GCC14_LIB:$LD_LIBRARY_PATH
 
 #--------------------------------------------------
 # Load CMake
@@ -60,18 +53,12 @@ cmake --version
 echo
 echo "[GPU]"
 
-if command -v nvidia-smi &> /dev/null
-then
+if command -v nvidia-smi >/dev/null 2>&1; then
     nvidia-smi --query-gpu=name,memory.total,driver_version \
                --format=csv,noheader
 else
     echo "nvidia-smi not available."
 fi
-
-echo
-echo "Using libstdc++:"
-ldd ./OpenACC_Test | grep libstdc++
-echo
 
 echo
 echo "=============================================="
