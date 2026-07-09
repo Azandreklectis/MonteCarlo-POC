@@ -12,6 +12,15 @@
 
 source setup_hpc.sh
 
+echo
+echo "===== LD_LIBRARY_PATH ====="
+echo "$LD_LIBRARY_PATH"
+echo
+
+echo "===== OpenACC_Test dependencies ====="
+ldd ~/MonteCarlo-POC/build/OpenACC_Test | grep libstdc++
+echo
+
 cd ~/MonteCarlo-POC/build
 
 ./OpenACC_Test
