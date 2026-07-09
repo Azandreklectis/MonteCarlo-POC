@@ -27,4 +27,4 @@ echo
 
 cd ~/MonteCarlo-POC/build
 
-./OpenACC_Test
+./build/OpenACC_Playground
