@@ -17,7 +17,6 @@ int main()
 #pragma acc parallel loop present(a)
           for(int i=0;i<N;i++) {
                a[i]=i;
-               cout<< a[i] <<endl;
           }
 
 #pragma acc parallel loop present(a)
