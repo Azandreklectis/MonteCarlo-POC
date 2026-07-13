@@ -9,24 +9,21 @@ int main()
      int a[N];
 
      for(int i=0;i<N;i++)
-          a[i]=0;
+          a[i]=-1;
 
-#pragma acc data copy(a)
-     {
-
-#pragma acc parallel loop present(a)
-          for(int i=0;i<N;i++) {
-               a[i]=i;
-          }
+#pragma acc enter data copyin(a)
 
 #pragma acc parallel loop present(a)
-          for(int i=0;i<N;i++)
-               a[i]*=10;
+     for(int i=0;i<N;i++)
+          a[i]=i*10;
 
-     }
+     // NEW
+#pragma acc update self(a)
 
      for(int i=0;i<N;i++)
           cout<<a[i]<<" ";
 
      cout<<endl;
+
+#pragma acc exit data delete(a)
 }
