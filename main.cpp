@@ -6,24 +6,31 @@ int main()
 {
      const int N = 10;
 
-     int a[N];
+     int* a = new int[N];
 
-     for(int i=0;i<N;i++)
-          a[i]=-1;
+     for(int i = 0; i < N; i++)
+          a[i] = i;
 
-#pragma acc enter data copyin(a)
+     // Allocate device memory for the array and copy it
+#pragma acc enter data copyin(a[0:N])
 
+     // Use the array already present on the GPU
 #pragma acc parallel loop present(a)
-     for(int i=0;i<N;i++)
-          a[i]=i*10;
+     for(int i = 0; i < N; i++)
+     {
+          a[i] *= 10;
+     }
 
-     // NEW
-#pragma acc update self(a)
+     // Bring results back
+#pragma acc update self(a[0:N])
 
-     for(int i=0;i<N;i++)
-          cout<<a[i]<<" ";
+     for(int i = 0; i < N; i++)
+          cout << a[i] << " ";
 
-     cout<<endl;
+     cout << endl;
 
-#pragma acc exit data delete(a)
+     // Free GPU memory
+#pragma acc exit data delete(a[0:N])
+
+     delete[] a;
 }
