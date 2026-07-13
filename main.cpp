@@ -4,24 +4,20 @@ using namespace std;
 
 int main()
 {
-     const int N = 10;
+     int a[10];
 
-     int a[N];
+     for (int i = 0; i < 10; i++)
+          a[i] = 5;
 
-     for(int i=0;i<N;i++)
-          a[i] = -1;
-
-#pragma acc data copyin(a)
+#pragma acc data copyout(a)
      {
 #pragma acc parallel loop
-          for(int i=0;i<N;i++)
+          for (int i = 0; i < 10; i++)
           {
-               a[i] = i * 10;
+               a[i] += 1;
           }
      }
 
-     for(int i=0;i<N;i++)
+     for (int i = 0; i < 10; i++)
           cout << a[i] << " ";
-
-     cout << endl;
 }
