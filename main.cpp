@@ -1,5 +1,4 @@
 #include <iostream>
-
 using namespace std;
 
 int main()
@@ -8,16 +7,9 @@ int main()
 
     int sum = 0;
 
-#pragma acc data copy(sum)
-    {
-#pragma acc parallel loop present(sum)
-        for(int i=0;i<N;i++)
-        {
-            sum++;
-        }
-
-#pragma acc update self(sum)
-    }
+#pragma acc parallel loop reduction(+:sum)
+    for(int i = 0; i < N; i++)
+        sum++;
 
     cout << sum << endl;
 }
