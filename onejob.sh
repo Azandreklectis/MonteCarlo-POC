@@ -25,4 +25,6 @@ ldd ~/MonteCarlo-POC/build/OpenACC_Playground | grep libstdc++
 
 cd ~/MonteCarlo-POC/build
 
+export NVCOMPILER_ACC_NOTIFY=3
+
 ./OpenACC_Playground
