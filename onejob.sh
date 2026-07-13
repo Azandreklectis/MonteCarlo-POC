@@ -17,6 +17,8 @@ echo
 echo "===== LD_LIBRARY_PATH ====="
 echo "$LD_LIBRARY_PATH"
 
+echo "meeeoooooooowwwwwwww"
+
 echo
 echo "===== OpenACC_Playground dependencies ====="
 ldd ~/MonteCarlo-POC/build/OpenACC_Playground | grep libstdc++
