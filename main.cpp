@@ -8,17 +8,20 @@ int main()
 
      int a[N];
 
-#pragma acc data copy(a)
+     for(int i=0;i<N;i++)
+          a[i] = -1;
+
+#pragma acc data copyin(a)
      {
-     #pragma acc parallel loop
+#pragma acc parallel loop
           for(int i=0;i<N;i++)
           {
-               a[i]=i*10;
+               a[i] = i * 10;
           }
      }
 
      for(int i=0;i<N;i++)
-          cout<<a[i]<<" ";
+          cout << a[i] << " ";
 
-     cout<<endl;
+     cout << endl;
 }
