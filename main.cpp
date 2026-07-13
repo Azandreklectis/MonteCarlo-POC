@@ -1,36 +1,54 @@
 #include <iostream>
+#include <openacc.h>
 
 using namespace std;
 
-int main()
+class Test
 {
-     const int N = 10;
+public:
+     int* arr;
+     int N;
 
-     int* a = new int[N];
-
-     for(int i = 0; i < N; i++)
-          a[i] = i;
-
-     // Allocate device memory for the array and copy it
-#pragma acc enter data copyin(a[0:N])
-
-     // Use the array already present on the GPU
-#pragma acc parallel loop present(a)
-     for(int i = 0; i < N; i++)
+     Test(int n)
      {
-          a[i] *= 10;
+          N = n;
+          arr = new int[N];
+
+          for(int i=0;i<N;i++)
+               arr[i]=i;
      }
 
-     // Bring results back
-#pragma acc update self(a[0:N])
+     ~Test()
+     {
+          delete[] arr;
+     }
 
-     for(int i = 0; i < N; i++)
-          cout << a[i] << " ";
+     void multiply()
+     {
+#pragma acc parallel loop present(this)
+          for(int i=0;i<N;i++)
+               arr[i]*=11;
+     }
+};
 
-     cout << endl;
+int main()
+{
+     Test t(10);
 
-     // Free GPU memory
-#pragma acc exit data delete(a[0:N])
+#pragma acc enter data copyin(&t)
+#pragma acc enter data copyin(t.arr[0:t.N])
 
-     delete[] a;
+     acc_attach((void**)&t.arr);
+
+     t.multiply();
+
+#pragma acc update self(t.arr[0:t.N])
+
+     for(int i=0;i<t.N;i++)
+          cout<<t.arr[i]<<" ";
+
+     cout<<endl;
+
+#pragma acc exit data delete(t.arr[0:t.N])
+#pragma acc exit data delete(&t)
 }
