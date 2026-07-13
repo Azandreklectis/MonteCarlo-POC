@@ -12,15 +12,15 @@
 source setup_hpc.sh
 
 export LD_LIBRARY_PATH=/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.2.0/gcc-14.2.0-tzadgwdvjenkrgflefidpb7lz636pcso/lib64:/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.2.0/gcc-14.2.0-tzadgwdvjenkrgflefidpb7lz636pcso/lib:$LD_LIBRARY_PATH
-
-echo
-echo "===== LD_LIBRARY_PATH ====="
-echo "$LD_LIBRARY_PATH"
-
-echo "meeeoooooooowwwwwwww"
-
-echo
-echo "===== OpenACC_Playground dependencies ====="
+#
+#echo
+#echo "===== LD_LIBRARY_PATH ====="
+#echo "$LD_LIBRARY_PATH"
+#
+#echo "meeeoooooooowwwwwwww"
+#
+#echo
+#echo "===== OpenACC_Playground dependencies ====="
 ldd ~/MonteCarlo-POC/build/OpenACC_Playground | grep libstdc++
 
 cd ~/MonteCarlo-POC/build
