@@ -10,7 +10,7 @@ int main()
 
 #pragma acc enter data create(a)
 
-#pragma acc parallel loop gang vector
+#pragma acc parallel loop present(a) gang vector
      for(int i=0;i<N;i++)
           a[i]=i;
 
@@ -23,10 +23,4 @@ int main()
      cout<<endl;
 }
 
-// 9, Generating enter data create(a[:])
-//    Generating NVIDIA GPU code
-//    14, #pragma acc loop gang, vector(96) /* blockIdx.x threadIdx.x */
-// 9, Generating implicit copyout(a[:]) [if not already present]
-//
-// 15, Generating update self(a[:])
-//    Generating exit data delete(a[:])
+)
