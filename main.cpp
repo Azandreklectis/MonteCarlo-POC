@@ -9,19 +9,25 @@ int main()
      int a[N];
 
      for(int i=0;i<N;i++)
-          a[i] = -1;
+          a[i]=0;
 
-#pragma acc data create(a)
+#pragma acc data copy(a)
      {
-#pragma acc parallel loop
-          for(int i=0;i<N;i++)
-          {
-               a[i] = i * 10;
+
+#pragma acc parallel loop present(a)
+          for(int i=0;i<N;i++) {
+               a[i]=i;
+               cout<< a[i] <<endl;
           }
+
+#pragma acc parallel loop present(a)
+          for(int i=0;i<N;i++)
+               a[i]*=10;
+
      }
 
      for(int i=0;i<N;i++)
-          cout << a[i] << " ";
+          cout<<a[i]<<" ";
 
-     cout << endl;
+     cout<<endl;
 }
