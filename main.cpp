@@ -1,54 +1,21 @@
 #include <iostream>
-#include <openacc.h>
 
 using namespace std;
 
-class Test
-{
-public:
-     int* arr;
-     int N;
-
-     Test(int n)
-     {
-          N = n;
-          arr = new int[N];
-
-          for(int i=0;i<N;i++)
-               arr[i]=i;
-     }
-
-     ~Test()
-     {
-          delete[] arr;
-     }
-
-     void multiply()
-     {
-#pragma acc parallel loop present(this)
-          for(int i=0;i<N;i++)
-               arr[i]*=11;
-     }
-};
-
 int main()
 {
-     Test t(10);
+     const int N = 100;
 
-#pragma acc enter data copyin(&t)
-#pragma acc enter data copyin(t.arr[0:t.N])
+     int a[N];
 
-     acc_attach((void**)&t.arr);
+#pragma acc parallel loop gang vector
+     for(int i=0;i<N;i++)
+          a[i]=i;
 
-     t.multiply();
+#pragma acc update self(a)
 
-#pragma acc update self(t.arr[0:t.N])
-
-     for(int i=0;i<t.N;i++)
-          cout<<t.arr[i]<<" ";
+     for(int i=0;i<10;i++)
+          cout<<a[i]<<" ";
 
      cout<<endl;
-
-#pragma acc exit data delete(t.arr[0:t.N])
-#pragma acc exit data delete(&t)
 }
