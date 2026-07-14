@@ -84,14 +84,18 @@ public:
 
     void initialize()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < totalSites; i++)
         {
-            double r = RandomGenerator::uniform(rngStates[i].state);
+            double random = RandomGenerator::uniform(rngStates[i].state);
 
-            cout << i << " : " << r << endl;
+            spin[i] = (random < 0.5) ? -1 : 1;
+
+            if (i < 10)
+            {
+                cout << random << " -> " << spin[i] << endl;
+            }
         }
     }
-
     void printLattice() const
     {
         for(int row = 0; row < N; row++)
