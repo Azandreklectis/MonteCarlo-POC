@@ -70,7 +70,7 @@ public:
         // Initialize RNG states
         for (int i = 0; i < totalSites; i++)
         {
-            rngStates[i].state = seed + i;
+            rngStates[i].state = RandomGenerator::splitmix32(seed + i);
         }
 
         // Initialize lattice

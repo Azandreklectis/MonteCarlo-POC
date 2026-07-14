@@ -26,4 +26,13 @@ public:
             xorshift(state)
         ) / 4294967295.0;
     }
+
+    static inline unsigned int splitmix32(unsigned int x)
+    {
+        x += 0x9e3779b9u;
+        x = (x ^ (x >> 16)) * 0x85ebca6bu;
+        x = (x ^ (x >> 13)) * 0xc2b2ae35u;
+        x ^= (x >> 16);
+        return x;
+    }
 };
