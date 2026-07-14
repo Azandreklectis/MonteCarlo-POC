@@ -55,6 +55,13 @@ public:
 
         sweepState = seed ^ 0x9E3779B9u;
 
+        cout << "Seed = " << seed << endl;
+
+        for (int i = 0; i < 5; i++)
+        {
+            cout << rngStates[i].state << endl;
+        }
+
         // Periodic boundary lookup tables
         for (int i = 0; i < N; i++)
         {
@@ -77,13 +84,11 @@ public:
 
     void initialize()
     {
-        for(int i = 0; i < totalSites; i++)
+        for (int i = 0; i < 10; i++)
         {
-            double random =
-                RandomGenerator::uniform(rngStates[i].state);
+            double r = RandomGenerator::uniform(rngStates[i].state);
 
-            spin[i] =
-                (random < 0.5) ? -1 : 1;
+            cout << i << " : " << r << endl;
         }
     }
 
@@ -100,5 +105,5 @@ public:
         }
     }
 
-    
+
 };
