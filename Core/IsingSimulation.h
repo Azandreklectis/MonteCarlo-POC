@@ -116,4 +116,56 @@ public:
             cout << endl;
         }
     }
+
+    double deltaEnergy(int row, int col)
+    {
+        int idx = index(row, col);
+
+        int currentSpin = spin[idx];
+
+        int neighbourSum =
+            spin[index(up[row], col)] +
+            spin[index(down[row], col)] +
+            spin[index(row, left[col])] +
+            spin[index(row, right[col])];
+
+        return
+            2.0 *
+            currentSpin *
+            (
+                params.couplingConstant * neighbourSum +
+                params.magneticField
+            );
+    }
+
+    bool acceptMove(double deltaEnergy, double random)
+    {
+        if (deltaEnergy <= 0.0)
+        {
+            return true;
+        }
+
+        double probability =
+            exp(-deltaEnergy / params.temperature);
+
+        return random <= probability;
+    }
+
+    void metropolisUpdate(int row, int col)
+    {
+        int idx = index(row, col);
+
+        double random =
+            RandomGenerator::uniform(rngStates[idx].state);
+
+        double dE =
+            deltaEnergy(row, col);
+
+        if (acceptMove(dE, random))
+        {
+            spin[idx] *= -1;
+        }
+    }
+
+
 };
