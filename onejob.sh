@@ -22,9 +22,9 @@ export LD_LIBRARY_PATH=/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascade
 #
 #echo
 #echo "===== OpenACC_Test dependencies ====="
-ldd ~/OpenACC_Test/build/OpenACC_Test | grep libstdc++
+ldd ~/MonteCarlo-POC/build/OpenACC_Test | grep libstdc++
 
-cd ~/OpenACC_Test/build
+cd ~/MonteCarlo-POC/build
 
 export NVCOMPILER_ACC_NOTIFY=3
 
