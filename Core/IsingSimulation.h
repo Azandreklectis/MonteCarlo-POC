@@ -79,14 +79,29 @@ public:
 
     void initialize()
     {
+        int positive = 0;
+        int negative = 0;
+
         for (int i = 0; i < totalSites; i++)
         {
-            double random =
-                RandomGenerator::uniform(rngStates[i].state);
+            double random = RandomGenerator::uniform(rngStates[i].state);
 
-            spin[i] =
-                (random < 0.5) ? -1 : 1;
+            spin[i] = (random < 0.5) ? -1 : 1;
+
+            if (spin[i] == 1)
+                positive++;
+            else
+                negative++;
+
+            if (i < 20)
+            {
+                cout << i << " : " << random
+                     << " -> " << spin[i] << endl;
+            }
         }
+
+        cout << "\nPositive = " << positive << endl;
+        cout << "Negative = " << negative << endl;
     }
 
     void printLattice() const
