@@ -28,3 +28,17 @@ int main()
 
     cout << "\nTotal = " << total << endl;
 }
+
+// libstdc++.so.6 => /home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.2.0/gcc-14.2.0-tzadgwdvjenkrgflefidpb7lz636pcso/lib64/libstdc++.so.6 (0x00007f1e0aab7000)
+// Bin 0 : 340
+// Bin 1 : 340
+// Bin 2 : 340
+// Bin 3 : 340
+// Bin 4 : 340
+// Bin 5 : 340
+// Bin 6 : 340
+// Bin 7 : 340
+// Bin 8 : 340
+// Bin 9 : 340
+//
+// Total = 3400
