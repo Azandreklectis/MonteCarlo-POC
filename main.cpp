@@ -4,7 +4,7 @@ using namespace std;
 
 int main()
 {
-    const int N = 10;
+    const int N = 10000000;
 
     int hist[10];
 
