@@ -27,5 +27,7 @@ int main()
 
     cout << "\nMemory layer initialized successfully.\n";
 
+    simulation.printLattice();
+
     return 0;
 }

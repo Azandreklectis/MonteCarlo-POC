@@ -2,7 +2,7 @@
 
 struct SimulationParameters
 {
-    int latticeSize = 128;
+    int latticeSize = 20;
 
     double temperature = 2.269;
 
@@ -10,5 +10,5 @@ struct SimulationParameters
 
     double magneticField = 0.0;
 
-    int monteCarloSteps = 1000;
+    int monteCarloSteps = 100;
 };

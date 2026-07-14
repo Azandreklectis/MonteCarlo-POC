@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <random>
+#include <iostream>
 
 #include "SimulationParameters.h"
 #include "RandomGenerator.h"
@@ -69,5 +70,35 @@ public:
         {
             rngStates[i].state = seed + i;
         }
+        initialize();
     };
+
+public:
+
+    void initialize()
+    {
+        for(int i = 0; i < totalSites; i++)
+        {
+            double random =
+                RandomGenerator::uniform(rngStates[i].state);
+
+            spin[i] =
+                (random < 0.5) ? -1 : 1;
+        }
+    }
+
+    void printLattice() const
+    {
+        for(int row = 0; row < N; row++)
+        {
+            for(int col = 0; col < N; col++)
+            {
+                cout << spin[index(row,col)] << " ";
+            }
+
+            cout << endl;
+        }
+    }
+
+    
 };
