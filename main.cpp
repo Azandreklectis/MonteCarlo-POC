@@ -4,29 +4,25 @@ using namespace std;
 
 int main()
 {
-    const int N = 10000000;
+    const int N = 100000000;
 
-    int hist[10];
+    int *a = new int[N];
 
-    for(int i=0;i<10;i++)
-        hist[i]=0;
+#pragma acc enter data create(a[0:N])
 
-#pragma acc parallel loop
+#pragma acc parallel loop present(a) async
     for(int i=0;i<N;i++)
-    {
-        int bin = i % 10;      // deterministic instead of random
-#pragma acc atomic update
-        hist[bin]++;
-    }
+        a[i]=i;
 
-    int total = 0;
+    cout<<"CPU is free"<<endl;
 
-    for(int i=0;i<10;i++)
-    {
-        cout << "Bin " << i << " : " << hist[i] << endl;
-        total += hist[i];
-    }
+#pragma acc wait
 
-    cout << "\nTotal = " << total << endl;
+#pragma acc update self(a[0:N])
+
+    cout<<a[123]<<endl;
+
+#pragma acc exit data delete(a[0:N])
+
+    delete[] a;
 }
-
