@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-#echo
-#echo "=============================================="
-#echo "      MonteCarlo-POC HPC Environment"
-#echo "=============================================="
-#echo
+echo
+echo "=============================================="
+echo "      OpenACC_Test HPC Environment"
+echo "=============================================="
+echo
 
 #--------------------------------------------------
 # Initialize Spack
@@ -37,6 +37,7 @@ spack load cmake@3.31.11
 GCC14_ROOT=/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.2.0/gcc-14.2.0-tzadgwdvjenkrgflefidpb7lz636pcso
 
 export LD_LIBRARY_PATH="$GCC14_ROOT/lib64:$GCC14_ROOT/lib:$LD_LIBRARY_PATH"
+
 #
 #echo
 #echo "=============================================="
@@ -70,7 +71,7 @@ fi
 
 #echo
 #echo "[libstdc++]"
-ldd ~/MonteCarlo-POC/build/OpenACC_Playground | grep libstdc++
+ldd ~/OpenACC_Test/build/OpenACC_Test | grep libstdc++
 
 echo
 echo "=============================================="
