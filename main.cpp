@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-// #pragma acc routine seq
+#pragma acc routine seq
 int square(int x)
 {
     return x*x;
