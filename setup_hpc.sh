@@ -1,10 +1,10 @@
 #!/bin/bash
-
-echo
-echo "=============================================="
-echo "      MonteCarlo-POC HPC Environment"
-echo "=============================================="
-echo
+#
+#echo
+#echo "=============================================="
+#echo "      MonteCarlo-POC HPC Environment"
+#echo "=============================================="
+#echo
 
 #--------------------------------------------------
 # Initialize Spack
@@ -13,10 +13,10 @@ echo
 source /home/apps/SPACK/spack/share/spack/setup-env.sh
 
 #--------------------------------------------------
-# Load Compiler
+# Load GCC (required runtime)
 #--------------------------------------------------
 
-module load compiler/gcc/12.4
+spack load /xaaaxgt
 
 #--------------------------------------------------
 # Load NVIDIA HPC SDK
@@ -30,36 +30,47 @@ spack load nvhpc@24.3
 
 spack load cmake@3.31.11
 
-echo
-echo "=============================================="
-echo "Environment Information"
-echo "=============================================="
+#--------------------------------------------------
+# Force GCC 14 runtime first
+#--------------------------------------------------
 
-echo
-echo "[GCC]"
-which gcc
-gcc --version
+GCC14_ROOT=/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.2.0/gcc-14.2.0-tzadgwdvjenkrgflefidpb7lz636pcso
 
-echo
-echo "[NVIDIA HPC SDK]"
-which nvc++
-nvc++ --version
+export LD_LIBRARY_PATH="$GCC14_ROOT/lib64:$GCC14_ROOT/lib:$LD_LIBRARY_PATH"
+#
+#echo
+#echo "=============================================="
+#echo "Environment Information"
+#echo "=============================================="
+#
+#echo
+#echo "[GCC]"
+#which gcc
+#gcc --version
+#
+#echo
+#echo "[NVIDIA HPC SDK]"
+#which nvc++
+#nvc++ --version
+#
+#echo
+#echo "[CMake]"
+#which cmake
+#cmake --version
+#
+#echo
+#echo "[GPU]"
 
-echo
-echo "[CMake]"
-which cmake
-cmake --version
-
-echo
-echo "[GPU]"
-
-if command -v nvidia-smi &> /dev/null
-then
+if command -v nvidia-smi >/dev/null 2>&1; then
     nvidia-smi --query-gpu=name,memory.total,driver_version \
                --format=csv,noheader
 else
     echo "nvidia-smi not available."
 fi
+
+#echo
+#echo "[libstdc++]"
+ldd ~/MonteCarlo-POC/build/OpenACC_Playground | grep libstdc++
 
 echo
 echo "=============================================="
