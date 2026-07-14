@@ -29,5 +29,11 @@ int main()
 
     simulation.printLattice();
 
+    cout << "\n-----------------\n";
+
+    simulation.monteCarloStep();
+
+    simulation.printLattice();
+
     return 0;
 }

@@ -167,5 +167,48 @@ public:
         }
     }
 
+    void updateBlack()
+    {
+        for (int row = 0; row < N; row++)
+        {
+            int startCol = row % 2;
+
+            for (int col = startCol; col < N; col += 2)
+            {
+                metropolisUpdate(row, col);
+            }
+        }
+    }
+
+    void updateWhite()
+    {
+        for (int row = 0; row < N; row++)
+        {
+            int startCol = (row + 1) % 2;
+
+            for (int col = startCol; col < N; col += 2)
+            {
+                metropolisUpdate(row, col);
+            }
+        }
+    }
+
+    void monteCarloStep()
+    {
+        bool blackFirst =
+            RandomGenerator::uniform(sweepState) < 0.5;
+
+        if (blackFirst)
+        {
+            updateBlack();
+            updateWhite();
+        }
+        else
+        {
+            updateWhite();
+            updateBlack();
+        }
+    }
+
 
 };
