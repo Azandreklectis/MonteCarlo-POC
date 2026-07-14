@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gif.h"
+#include "../GIF/gif.h"
 
 #include <opencv2/opencv.hpp>
 #include <filesystem>

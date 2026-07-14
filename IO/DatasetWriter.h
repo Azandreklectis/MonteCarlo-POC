@@ -3,7 +3,7 @@
 #include <fstream>
 #include <filesystem>
 
-#include "../SimulationParameters/SimulationParameters.h"
+#include "../Core/SimulationParameters.h"
 
 using namespace std;
 

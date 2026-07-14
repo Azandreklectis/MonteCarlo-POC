@@ -7,10 +7,15 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(OpenACC_Test
         main.cpp
         Entities/Particle.h
-        SimulationParameters/SimulationParameters.h
-        Simulation/IsingSimulation.h
-        Dataset/DatasetWriter.h
-        Utilities/RandomGenerator.h
+        Core/SimulationParameters.h
+        Core/IsingSimulation.h
+        IO/DatasetWriter.h
+        Core/RandomGenerator.h
+        Core/Measurements.h
+        IO/ConfigReader.h
+        IO/Logger.h
+        Benchmark/Timer.h
+        Benchmark/Benchmark.h
 )
 
 target_compile_options(OpenACC_Test PRIVATE
