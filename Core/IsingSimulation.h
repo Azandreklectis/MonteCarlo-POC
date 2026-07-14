@@ -1,8 +1,8 @@
 #pragma once
 
+#include <iostream>
 #include <memory>
 #include <random>
-#include <iostream>
 
 #include "SimulationParameters.h"
 #include "RandomGenerator.h"
@@ -12,6 +12,7 @@ using namespace std;
 class IsingSimulation
 {
 private:
+
     SimulationParameters params;
 
     int N;
@@ -33,6 +34,7 @@ private:
     }
 
 public:
+
     IsingSimulation(const SimulationParameters& parameters)
         : params(parameters)
     {
@@ -55,13 +57,6 @@ public:
 
         sweepState = seed ^ 0x9E3779B9u;
 
-        cout << "Seed = " << seed << endl;
-
-        for (int i = 0; i < 5; i++)
-        {
-            cout << rngStates[i].state << endl;
-        }
-
         // Periodic boundary lookup tables
         for (int i = 0; i < N; i++)
         {
@@ -77,37 +72,33 @@ public:
         {
             rngStates[i].state = seed + i;
         }
-        initialize();
-    };
 
-public:
+        // Initialize lattice
+        initialize();
+    }
 
     void initialize()
     {
         for (int i = 0; i < totalSites; i++)
         {
-            double random = RandomGenerator::uniform(rngStates[i].state);
+            double random =
+                RandomGenerator::uniform(rngStates[i].state);
 
-            spin[i] = (random < 0.5) ? -1 : 1;
-
-            if (i < 10)
-            {
-                cout << random << " -> " << spin[i] << endl;
-            }
+            spin[i] =
+                (random < 0.5) ? -1 : 1;
         }
     }
+
     void printLattice() const
     {
-        for(int row = 0; row < N; row++)
+        for (int row = 0; row < N; row++)
         {
-            for(int col = 0; col < N; col++)
+            for (int col = 0; col < N; col++)
             {
-                cout << spin[index(row,col)] << " ";
+                cout << spin[index(row, col)] << " ";
             }
 
             cout << endl;
         }
     }
-
-
 };
