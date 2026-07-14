@@ -1,28 +1,24 @@
 #include <iostream>
-
 using namespace std;
+
+// #pragma acc routine seq
+int square(int x)
+{
+    return x*x;
+}
 
 int main()
 {
-    const int N = 100000000;
+    const int N=10;
 
-    int *a = new int[N];
+    int a[N];
 
-#pragma acc enter data create(a[0:N])
-
-#pragma acc parallel loop present(a) async
+#pragma acc parallel loop
     for(int i=0;i<N;i++)
-        a[i]=i;
+        a[i]=square(i);
 
-    cout<<"CPU is free"<<endl;
+    for(int i=0;i<N;i++)
+        cout<<a[i]<<" ";
 
-#pragma acc wait
-
-#pragma acc update self(a[0:N])
-
-    cout<<a[123]<<endl;
-
-#pragma acc exit data delete(a[0:N])
-
-    delete[] a;
+    cout<<endl;
 }
