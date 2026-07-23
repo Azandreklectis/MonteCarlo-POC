@@ -137,11 +137,12 @@ public:
     void initialize()
     {
         int* spinPtr = spin.get();
-
         RNGState* rngPtr = rngStates.get();
 
-        #pragma acc parallel loop present(spinPtr,rngPtr)
-        for(int i=0;i<totalSites;i++)
+        const int sites = totalSites;
+
+        #pragma acc parallel loop present(spinPtr[0:sites], rngPtr[0:sites])
+        for(int i = 0; i < sites; i++)
         {
             double random =
                 RandomGenerator::uniform(rngPtr[i].state);
@@ -149,6 +150,7 @@ public:
             spinPtr[i] =
                 (random < 0.5) ? -1 : 1;
         }
+
     }
 
     void printLattice() const
