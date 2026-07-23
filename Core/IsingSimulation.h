@@ -166,53 +166,88 @@ public:
         }
     }
 
-    double deltaEnergy(int row, int col)
+    inline double deltaEnergy(int row, int col)
     {
-        int idx = index(row, col);
+        const int latticeSize = N;
 
-        int currentSpin = spin[idx];
+        int* spinPtr = spin.get();
+        int* upPtr = up.get();
+        int* downPtr = down.get();
+        int* leftPtr = left.get();
+        int* rightPtr = right.get();
+
+        const double J = params.couplingConstant;
+        const double H = params.magneticField;
+
+        int idx = row * latticeSize + col;
 
         int neighbourSum =
-            spin[index(up[row], col)] +
-            spin[index(down[row], col)] +
-            spin[index(row, left[col])] +
-            spin[index(row, right[col])];
+            spinPtr[upPtr[row] * latticeSize + col] +
+            spinPtr[downPtr[row] * latticeSize + col] +
+            spinPtr[row * latticeSize + leftPtr[col]] +
+            spinPtr[row * latticeSize + rightPtr[col]];
 
         return
             2.0 *
-            currentSpin *
+            spinPtr[idx] *
             (
-                params.couplingConstant * neighbourSum +
-                params.magneticField
+                J * neighbourSum +
+                H
             );
     }
 
-    bool acceptMove(double deltaEnergy, double random)
+    inline bool acceptMove(double deltaEnergy, double random)
     {
+        const double temperature = params.temperature;
+
         if (deltaEnergy <= 0.0)
         {
             return true;
         }
 
-        double probability =
-            exp(-deltaEnergy / params.temperature);
+        double probability = exp(-deltaEnergy / temperature);
 
         return random <= probability;
     }
 
-    void metropolisUpdate(int row, int col)
+    inline void metropolisUpdate(int row, int col)
     {
-        int idx = index(row, col);
+        const int latticeSize = N;
+
+        int* spinPtr = spin.get();
+
+        RNGState* rngPtr = rngStates.get();
+
+        int* upPtr = up.get();
+        int* downPtr = down.get();
+        int* leftPtr = left.get();
+        int* rightPtr = right.get();
+
+        const double J = params.couplingConstant;
+        const double H = params.magneticField;
+
+        int idx = row * latticeSize + col;
 
         double random =
-            RandomGenerator::uniform(rngStates[idx].state);
+            RandomGenerator::uniform(rngPtr[idx].state);
+
+        int neighbourSum =
+            spinPtr[upPtr[row] * latticeSize + col] +
+            spinPtr[downPtr[row] * latticeSize + col] +
+            spinPtr[row * latticeSize + leftPtr[col]] +
+            spinPtr[row * latticeSize + rightPtr[col]];
 
         double dE =
-            deltaEnergy(row, col);
+            2.0 *
+            spinPtr[idx] *
+            (
+                J * neighbourSum +
+                H
+            );
 
         if (acceptMove(dE, random))
         {
-            spin[idx] *= -1;
+            spinPtr[idx] *= -1;
         }
     }
 
