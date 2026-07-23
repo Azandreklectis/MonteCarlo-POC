@@ -36,14 +36,14 @@ int main()
     cout << "\nMemory layer initialized successfully.\n\n";
 
     cout << "Initial Lattice:\n";
-    simulation.printLattice();
+    // simulation.printLattice();
 
     cout << "\nInitial Magnetization : "
          << simulation.calculateMagnetization()
          << endl;
 
     // Reset statistics before simulation
-    simulation.resetStatistics();
+    // simulation.resetStatistics();
 
     cout << "\nRunning Monte Carlo Simulation...\n";
 
