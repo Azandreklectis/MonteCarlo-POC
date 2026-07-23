@@ -38,29 +38,29 @@ GCC14_ROOT=/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.
 
 export LD_LIBRARY_PATH="$GCC14_ROOT/lib64:$GCC14_ROOT/lib:$LD_LIBRARY_PATH"
 
-#
-#echo
-#echo "=============================================="
-#echo "Environment Information"
-#echo "=============================================="
-#
-#echo
-#echo "[GCC]"
-#which gcc
-#gcc --version
-#
-#echo
-#echo "[NVIDIA HPC SDK]"
-#which nvc++
-#nvc++ --version
-#
-#echo
-#echo "[CMake]"
-#which cmake
-#cmake --version
-#
-#echo
-#echo "[GPU]"
+
+echo
+echo "=============================================="
+echo "Environment Information"
+echo "=============================================="
+
+echo
+echo "[GCC]"
+which gcc
+gcc --version
+
+echo
+echo "[NVIDIA HPC SDK]"
+which nvc++
+nvc++ --version
+
+echo
+echo "[CMake]"
+which cmake
+cmake --version
+
+echo
+echo "[GPU]"
 
 if command -v nvidia-smi >/dev/null 2>&1; then
     nvidia-smi --query-gpu=name,memory.total,driver_version \
