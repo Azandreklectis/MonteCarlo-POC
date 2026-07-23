@@ -25,14 +25,25 @@ int main()
     cout << "Magnetic Field    : " << params.magneticField << '\n';
     cout << "Monte Carlo Steps : " << params.monteCarloSteps << '\n';
 
-    cout << "\nMemory layer initialized successfully.\n";
+    cout << "\nMemory layer initialized successfully.\n\n";
 
+    cout << "Initial Lattice:\n";
     simulation.printLattice();
 
-    cout << "\n-----------------\n";
+    cout << "\nRunning Monte Carlo Simulation...\n";
 
-    simulation.monteCarloStep();
+    for (int step = 0; step < params.monteCarloSteps; step++)
+    {
+        simulation.monteCarloStep();
+    }
 
+    // Copy the final lattice from GPU to CPU
+    simulation.updateHost();
+
+    cout << "\nSimulation Complete!\n";
+    cout << "----------------------------------------\n";
+
+    cout << "\nFinal Lattice:\n";
     simulation.printLattice();
 
     return 0;
