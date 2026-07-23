@@ -210,6 +210,7 @@ public:
         return random <= probability;
     }
 
+#pragma acc routine seq
     inline void metropolisUpdate(int row, int col)
     {
         const int latticeSize = N;
@@ -253,11 +254,29 @@ public:
 
     void updateBlack()
     {
-        for (int row = 0; row < N; row++)
+        const int latticeSize = N;
+        const int sites = totalSites;
+
+        int* spinPtr = spin.get();
+        RNGState* rngPtr = rngStates.get();
+
+        int* upPtr = up.get();
+        int* downPtr = down.get();
+        int* leftPtr = left.get();
+        int* rightPtr = right.get();
+
+        #pragma acc parallel loop present( \
+                    spinPtr[0:sites], \
+                    rngPtr[0:sites], \
+                    upPtr[0:latticeSize], \
+                    downPtr[0:latticeSize], \
+                    leftPtr[0:latticeSize], \
+                    rightPtr[0:latticeSize])
+        for (int row = 0; row < latticeSize; row++)
         {
             int startCol = row % 2;
 
-            for (int col = startCol; col < N; col += 2)
+            for (int col = startCol; col < latticeSize; col += 2)
             {
                 metropolisUpdate(row, col);
             }
