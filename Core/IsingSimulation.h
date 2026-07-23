@@ -388,4 +388,19 @@ rightPtr[0:latticeSize])
     }
 
 
+
+
+    double calculateMagnetization() const
+    {
+        long long totalSpin = 0;
+
+        for (int i = 0; i < totalSites; i++)
+        {
+            totalSpin += spin[i];
+        }
+
+        return static_cast<double>(totalSpin) / totalSites;
+    }
+
+
 };

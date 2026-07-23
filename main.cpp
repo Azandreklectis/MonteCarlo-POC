@@ -43,6 +43,21 @@ int main()
     cout << "\nSimulation Complete!\n";
     cout << "----------------------------------------\n";
 
+    cout << "Initial Magnetization : "
+     << simulation.calculateMagnetization()
+     << endl;
+
+    for(int i = 0; i < params.monteCarloSteps; i++)
+    {
+        simulation.monteCarloStep();
+    }
+
+    simulation.updateHost();
+
+    cout << "Final Magnetization : "
+         << simulation.calculateMagnetization()
+         << endl;
+
     cout << "\nFinal Lattice:\n";
     simulation.printLattice();
 
