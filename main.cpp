@@ -30,6 +30,13 @@ int main()
     cout << "Initial Lattice:\n";
     simulation.printLattice();
 
+    cout << "\nInitial Magnetization : "
+         << simulation.calculateMagnetization()
+         << endl;
+
+    // Reset statistics before simulation
+    simulation.resetStatistics();
+
     cout << "\nRunning Monte Carlo Simulation...\n";
 
     for (int step = 0; step < params.monteCarloSteps; step++)
@@ -37,22 +44,15 @@ int main()
         simulation.monteCarloStep();
     }
 
-    // Copy the final lattice from GPU to CPU
+    // Copy final lattice from GPU to CPU
     simulation.updateHost();
 
     cout << "\nSimulation Complete!\n";
     cout << "----------------------------------------\n";
 
-    cout << "Initial Magnetization : "
-     << simulation.calculateMagnetization()
-     << endl;
-
-    for(int i = 0; i < params.monteCarloSteps; i++)
-    {
-        simulation.monteCarloStep();
-    }
-
-    simulation.updateHost();
+    cout << "Acceptance Ratio : "
+         << simulation.getAcceptanceRatio()
+         << endl;
 
     cout << "Final Magnetization : "
          << simulation.calculateMagnetization()

@@ -33,6 +33,8 @@ private:
         return row * N + col;
     }
 
+    long long acceptedMoves = 0;
+
 public:
 
     void enterDeviceData()
@@ -265,17 +267,21 @@ public:
         int* leftPtr = left.get();
         int* rightPtr = right.get();
 
+        long long accepted = 0;
+
         const double J = params.couplingConstant;
         const double H = params.magneticField;
         const double temperature = params.temperature;
 
-        #pragma acc parallel loop present( \
-        spinPtr[0:sites], \
-        rngPtr[0:sites], \
-        upPtr[0:latticeSize], \
-        downPtr[0:latticeSize], \
-        leftPtr[0:latticeSize], \
-        rightPtr[0:latticeSize])
+#pragma acc parallel loop \
+reduction(+:accepted) \
+present( \
+spinPtr[0:sites], \
+rngPtr[0:sites], \
+upPtr[0:latticeSize], \
+downPtr[0:latticeSize], \
+leftPtr[0:latticeSize], \
+rightPtr[0:latticeSize])
         for (int row = 0; row < latticeSize; row++)
         {
             int startCol = row % 2;
@@ -306,9 +312,12 @@ public:
                     random <= exp(-dE / temperature))
                 {
                     spinPtr[idx] *= -1;
+                    accepted++;
                 }
             }
         }
+
+        acceptedMoves += accepted;
     }
 
     void updateWhite()
@@ -324,11 +333,15 @@ public:
         int* leftPtr = left.get();
         int* rightPtr = right.get();
 
+        long long accepted = 0;
+
         const double J = params.couplingConstant;
         const double H = params.magneticField;
         const double temperature = params.temperature;
 
-#pragma acc parallel loop present( \
+#pragma acc parallel loop \
+reduction(+:accepted) \
+present( \
 spinPtr[0:sites], \
 rngPtr[0:sites], \
 upPtr[0:latticeSize], \
@@ -365,9 +378,12 @@ rightPtr[0:latticeSize])
                     random <= exp(-dE / temperature))
                 {
                     spinPtr[idx] *= -1;
+                    accepted++;
                 }
             }
         }
+
+        acceptedMoves += accepted;
     }
 
     void monteCarloStep()
@@ -417,5 +433,21 @@ rightPtr[0:latticeSize])
 
     }
 
+    void resetStatistics()
+    {
+        acceptedMoves = 0;
+    }
+    double getAcceptanceRatio() const
+    {
+        long long attemptedMoves =
+            static_cast<long long>(params.monteCarloSteps) *
+            totalSites;
+
+        if (attemptedMoves == 0)
+            return 0.0;
+
+        return static_cast<double>(acceptedMoves) /
+               attemptedMoves;
+    }
 
 };
