@@ -210,7 +210,7 @@ public:
         return random <= probability;
     }
 
-#pragma acc routine seq
+    #pragma acc routine seq
     inline void metropolisUpdate(int row, int col)
     {
         const int latticeSize = N;
@@ -265,77 +265,48 @@ public:
         int* leftPtr = left.get();
         int* rightPtr = right.get();
 
+        const double J = params.couplingConstant;
+        const double H = params.magneticField;
+        const double temperature = params.temperature;
+
         #pragma acc parallel loop present( \
-                    spinPtr[0:sites], \
-                    rngPtr[0:sites], \
-                    upPtr[0:latticeSize], \
-                    downPtr[0:latticeSize], \
-                    leftPtr[0:latticeSize], \
-        void updateBlack()
-        {
-            const int latticeSize = N;
-            const int sites = totalSites;
-
-            int* spinPtr = spin.get();
-            RNGState* rngPtr = rngStates.get();
-
-            int* upPtr = up.get();
-            int* downPtr = down.get();
-            int* leftPtr = left.get();
-            int* rightPtr = right.get();
-
-            const double J = params.couplingConstant;
-            const double H = params.magneticField;
-            const double temperature = params.temperature;
-
-#pragma acc parallel loop present( \
-spinPtr[0:sites], \
-rngPtr[0:sites], \
-upPtr[0:latticeSize], \
-downPtr[0:latticeSize], \
-leftPtr[0:latticeSize], \
-rightPtr[0:latticeSize])
-            for (int row = 0; row < latticeSize; row++)
-            {
-                int startCol = row % 2;
-
-#pragma acc loop seq
-                for (int col = startCol; col < latticeSize; col += 2)
-                {
-                    int idx = row * latticeSize + col;
-
-                    double random =
-                        RandomGenerator::uniform(rngPtr[idx].state);
-
-                    int neighbourSum =
-                        spinPtr[upPtr[row] * latticeSize + col] +
-                        spinPtr[downPtr[row] * latticeSize + col] +
-                        spinPtr[row * latticeSize + leftPtr[col]] +
-                        spinPtr[row * latticeSize + rightPtr[col]];
-
-                    double dE =
-                        2.0 *
-                        spinPtr[idx] *
-                        (
-                            J * neighbourSum +
-                            H
-                        );
-
-                    if (dE <= 0.0 ||
-                        random <= exp(-dE / temperature))
-                    {
-                        spinPtr[idx] *= -1;
-                    }
-                }
-            }
-        }           rightPtr[0:latticeSize])
+        spinPtr[0:sites], \
+        rngPtr[0:sites], \
+        upPtr[0:latticeSize], \
+        downPtr[0:latticeSize], \
+        leftPtr[0:latticeSize], \
+        rightPtr[0:latticeSize])
         for (int row = 0; row < latticeSize; row++)
         {
             int startCol = row % 2;
 
+#pragma acc loop seq
             for (int col = startCol; col < latticeSize; col += 2)
             {
-                metropolisUpdate(row, col);
+                int idx = row * latticeSize + col;
+
+                double random =
+                    RandomGenerator::uniform(rngPtr[idx].state);
+
+                int neighbourSum =
+                    spinPtr[upPtr[row] * latticeSize + col] +
+                    spinPtr[downPtr[row] * latticeSize + col] +
+                    spinPtr[row * latticeSize + leftPtr[col]] +
+                    spinPtr[row * latticeSize + rightPtr[col]];
+
+                double dE =
+                    2.0 *
+                    spinPtr[idx] *
+                    (
+                        J * neighbourSum +
+                        H
+                    );
+
+                if (dE <= 0.0 ||
+                    random <= exp(-dE / temperature))
+                {
+                    spinPtr[idx] *= -1;
+                }
             }
         }
     }
