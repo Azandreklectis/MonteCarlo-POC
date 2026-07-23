@@ -3,10 +3,18 @@
 #include "Core/SimulationParameters.h"
 #include "Core/IsingSimulation.h"
 
+#include <openacc.h>
+
 using namespace std;
 
 int main()
 {
+    cout << "NVIDIA devices: "
+              << acc_get_num_devices(acc_device_nvidia) << '\n';
+
+    cout << "Current device type: "
+              << acc_get_device_type() << '\n';
+
     cout << "========================================\n";
     cout << "      OpenACC_Test - Ising Engine\n";
     cout << "========================================\n\n";

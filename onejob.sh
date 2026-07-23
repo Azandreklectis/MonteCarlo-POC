@@ -28,4 +28,11 @@ cd ~/MonteCarlo-POC/build
 
 export NVCOMPILER_ACC_NOTIFY=3
 
+export ACC_DEVICE_TYPE=nvidia
+
+cd ~/MonteCarlo-POC/build
+
+export ACC_DEVICE_TYPE=nvidia
+export NVCOMPILER_ACC_NOTIFY=3
+
 ./OpenACC_Test
