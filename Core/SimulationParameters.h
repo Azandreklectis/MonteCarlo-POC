@@ -4,7 +4,7 @@ struct SimulationParameters
 {
     int latticeSize = 46340;
 
-    double temperature = 3.269;
+    double temperature = 4.269;
 
     double couplingConstant = 1.0;
 

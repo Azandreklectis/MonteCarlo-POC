@@ -43,7 +43,7 @@ int main()
          << endl;
 
     // Reset statistics before simulation
-    // simulation.resetStatistics();
+    simulation.resetStatistics();
 
     cout << "\nRunning Monte Carlo Simulation...\n";
 
@@ -67,7 +67,7 @@ int main()
          << endl;
 
     cout << "\nFinal Lattice:\n";
-    simulation.printLattice();
+    // simulation.printLattice();
 
     return 0;
 }
