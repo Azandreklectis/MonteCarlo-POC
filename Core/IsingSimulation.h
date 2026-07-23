@@ -35,6 +35,55 @@ private:
 
 public:
 
+    void enterDeviceData()
+    {
+        int* spinPtr = spin.get();
+
+        RNGState* rngPtr = rngStates.get();
+
+        int* upPtr = up.get();
+        int* downPtr = down.get();
+
+        int* leftPtr = left.get();
+        int* rightPtr = right.get();
+
+        #pragma acc enter data copyin( \
+                spinPtr[0:totalSites], \
+                rngPtr[0:totalSites], \
+                upPtr[0:N], \
+                downPtr[0:N], \
+                leftPtr[0:N], \
+                rightPtr[0:N])
+    }
+
+    void updateHost()
+    {
+        int* spinPtr = spin.get();
+
+    #pragma acc update self(spinPtr[0:totalSites])
+    }
+
+    void exitDeviceData()
+    {
+        int* spinPtr = spin.get();
+
+        RNGState* rngPtr = rngStates.get();
+
+        int* upPtr = up.get();
+        int* downPtr = down.get();
+
+        int* leftPtr = left.get();
+        int* rightPtr = right.get();
+
+        #pragma acc exit data delete( \
+                spinPtr[0:totalSites], \
+                rngPtr[0:totalSites], \
+                upPtr[0:N], \
+                downPtr[0:N], \
+                leftPtr[0:N], \
+                rightPtr[0:N])
+    }
+
     IsingSimulation(const SimulationParameters& parameters)
         : params(parameters)
     {
@@ -73,35 +122,33 @@ public:
             rngStates[i].state = RandomGenerator::splitmix32(seed + i);
         }
 
-        // Initialize lattice
+        enterDeviceData();
+
         initialize();
+
+        updateHost();
+    }
+
+    ~IsingSimulation()
+    {
+        exitDeviceData();
     }
 
     void initialize()
     {
-        int positive = 0;
-        int negative = 0;
+        int* spinPtr = spin.get();
 
-        for (int i = 0; i < totalSites; i++)
+        RNGState* rngPtr = rngStates.get();
+
+        #pragma acc parallel loop present(spinPtr,rngPtr)
+        for(int i=0;i<totalSites;i++)
         {
-            double random = RandomGenerator::uniform(rngStates[i].state);
+            double random =
+                RandomGenerator::uniform(rngPtr[i].state);
 
-            spin[i] = (random < 0.5) ? -1 : 1;
-
-            if (spin[i] == 1)
-                positive++;
-            else
-                negative++;
-
-            if (i < 20)
-            {
-                cout << i << " : " << random
-                     << " -> " << spin[i] << endl;
-            }
+            spinPtr[i] =
+                (random < 0.5) ? -1 : 1;
         }
-
-        cout << "\nPositive = " << positive << endl;
-        cout << "Negative = " << negative << endl;
     }
 
     void printLattice() const
