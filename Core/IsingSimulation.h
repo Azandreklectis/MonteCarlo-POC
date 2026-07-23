@@ -389,17 +389,32 @@ rightPtr[0:latticeSize])
 
 
 
-
     double calculateMagnetization() const
     {
         long long totalSpin = 0;
 
+        int plus = 0;
+        int minus = 0;
+
         for (int i = 0; i < totalSites; i++)
         {
             totalSpin += spin[i];
+
+            if (spin[i] == 1)
+                plus++;
+            else if (spin[i] == -1)
+                minus++;
+            else
+                std::cout << "Invalid spin: " << spin[i] << '\n';
         }
 
+        std::cout << "Plus  : " << plus << '\n';
+        std::cout << "Minus : " << minus << '\n';
+        std::cout << "Sum   : " << totalSpin << '\n';
+        std::cout << "totalSites = " << totalSites << '\n';
+
         return static_cast<double>(totalSpin) / totalSites;
+
     }
 
 
