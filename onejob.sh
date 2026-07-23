@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=openacc
-#SBATCH --partition=gpu
-#SBATCH --gres=gpu:1
+#SBATCH --partition=cpu
+#SBATCH --gres=cpu:1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=01:00:00
