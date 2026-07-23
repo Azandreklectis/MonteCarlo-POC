@@ -7,7 +7,7 @@
 #SBATCH --time=01:00:00
 #SBATCH --output=job.%j.out
 #SBATCH --error=job.%j.err
-#SBATCH --reservation=iuac
+
 
 source setup_hpc.sh
 
