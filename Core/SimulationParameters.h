@@ -2,7 +2,7 @@
 
 struct SimulationParameters
 {
-    int latticeSize = 100;
+    int latticeSize = 10000;
 
     double temperature = 3.269;
 
