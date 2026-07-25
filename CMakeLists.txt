@@ -21,6 +21,7 @@ add_executable(OpenACC_Test
         Dataset/CSVWriter.h
         Dataset/CSVWriter.cpp
         Dataset/DatasetRecord.h
+        Core/SimulationResult.h
 )
 
 target_compile_options(OpenACC_Test PRIVATE

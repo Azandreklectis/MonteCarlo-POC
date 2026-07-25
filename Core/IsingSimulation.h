@@ -6,6 +6,7 @@
 
 #include "SimulationParameters.h"
 #include "RandomGenerator.h"
+#include "SimulationResult.h"
 
 using namespace std;
 
@@ -448,6 +449,30 @@ rightPtr[0:latticeSize])
 
         return static_cast<double>(acceptedMoves) /
                attemptedMoves;
+    }
+
+    SimulationResult runSimulation()
+    {
+        resetStatistics();
+
+        for (int step = 0; step < params.monteCarloSteps; step++)
+        {
+            monteCarloStep();
+        }
+
+        updateHost();
+
+        SimulationResult result;
+
+        result.averageMagnetization = calculateMagnetization();
+
+        result.acceptanceRatio = getAcceptanceRatio();
+
+        // Temporary values
+        result.averageEnergy = 0.0;
+        result.executionTimeMS = 0.0;
+
+        return result;
     }
 
 };
