@@ -16,6 +16,11 @@ add_executable(OpenACC_Test
         IO/Logger.h
         Benchmark/Timer.h
         Benchmark/Benchmark.h
+        Dataset/DatasetGenerator.h
+        Dataset/DatasetGenerator.cpp
+        Dataset/CSVWriter.h
+        Dataset/CSVWriter.cpp
+        Dataset/DatasetRecord.h
 )
 
 target_compile_options(OpenACC_Test PRIVATE

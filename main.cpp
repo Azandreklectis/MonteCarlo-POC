@@ -1,73 +1,29 @@
-#include <iostream>
-
-#include "Core/SimulationParameters.h"
-#include "Core/IsingSimulation.h"
-
-#include <openacc.h>
-
-using namespace std;
+#include "Dataset/CSVWriter.h"
 
 int main()
 {
-    cout << "NVIDIA devices: "
-              << acc_get_num_devices(acc_device_nvidia) << '\n';
+    CSVWriter writer("Output/dataset.csv");
 
-    cout << "Current device type: "
-              << acc_get_device_type() << '\n';
+    DatasetRecord record;
 
-    cout << "========================================\n";
-    cout << "      OpenACC_Test - Ising Engine\n";
-    cout << "========================================\n\n";
+    record.runID = 1;
+    record.latticeSize = 512;
+    record.temperature = 2.20;
+    record.magneticField = 1.55;
+    record.couplingConstant = 1.0;
+    record.monteCarloSteps = 1000;
 
-    SimulationParameters params;
+    record.averageEnergy = -1.83;
+    record.averageMagnetization = 0.91;
+    record.acceptanceRatio = 0.24;
 
-    IsingSimulation simulation(params);
+    record.executionTimeMS = 182.4;
 
-    cout << "Simulation created successfully!\n\n";
+    record.randomSeed = 12345;
 
-    cout << "Configuration:\n";
-    cout << "----------------------------------------\n";
-    cout << "Lattice Size      : " << params.latticeSize << " x " << params.latticeSize << '\n';
-    cout << "Temperature       : " << params.temperature << '\n';
-    cout << "Coupling Constant : " << params.couplingConstant << '\n';
-    cout << "Magnetic Field    : " << params.magneticField << '\n';
-    cout << "Monte Carlo Steps : " << params.monteCarloSteps << '\n';
+    record.spinFile = "run000001.bin";
 
-    cout << "\nMemory layer initialized successfully.\n\n";
-
-    cout << "Initial Lattice:\n";
-    // simulation.printLattice();
-
-    cout << "\nInitial Magnetization : "
-         << simulation.calculateMagnetization()
-         << endl;
-
-    // Reset statistics before simulation
-    simulation.resetStatistics();
-
-    cout << "\nRunning Monte Carlo Simulation...\n";
-
-    for (int step = 0; step < params.monteCarloSteps; step++)
-    {
-        simulation.monteCarloStep();
-    }
-
-    // Copy final lattice from GPU to CPU
-    simulation.updateHost();
-
-    cout << "\nSimulation Complete!\n";
-    cout << "----------------------------------------\n";
-
-    cout << "Acceptance Ratio : "
-         << simulation.getAcceptanceRatio()
-         << endl;
-
-    cout << "Final Magnetization : "
-         << simulation.calculateMagnetization()
-         << endl;
-
-    cout << "\nFinal Lattice:\n";
-    // simulation.printLattice();
+    writer.append(record);
 
     return 0;
 }
