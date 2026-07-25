@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <chrono>
 
 #include "SimulationParameters.h"
 #include "RandomGenerator.h"
@@ -455,10 +456,14 @@ rightPtr[0:latticeSize])
     {
         resetStatistics();
 
+        auto start = chrono::high_resolution_clock::now();
+
         for (int step = 0; step < params.monteCarloSteps; step++)
         {
             monteCarloStep();
         }
+
+        auto end = chrono::high_resolution_clock::now();
 
         updateHost();
 
@@ -470,7 +475,7 @@ rightPtr[0:latticeSize])
 
         // Temporary values
         result.averageEnergy = 0.0;
-        result.executionTimeMS = 0.0;
+        result.executionTimeMS = chrono::duration<double, milli>(end - start).count();
 
         return result;
     }
