@@ -5,6 +5,7 @@
 #include "SpinWriter.h"
 
 #include "../Core/SimulationParameters.h"
+#include "../Core/DatasetParameters.h"
 #include "../Core/IsingSimulation.h"
 #include "../Utilities/FileManager.h"
 
@@ -31,15 +32,18 @@ void DatasetGenerator::generate()
 
     int runID = 1;
 
-    for (double temperature = 0.5; temperature <= 5.0; temperature += 0.2)
+    for (double temperature = datasetParams.startTemperature;
+         temperature <= datasetParams.endTemperature;
+         temperature += datasetParams.temperatureStep)
     {
         SimulationParameters params;
 
-        params.latticeSize = 512;
+        params.latticeSize = datasetParams.latticeSize;
         params.temperature = temperature;
-        params.magneticField = 0.0;
-        params.couplingConstant = 1.0;
-        params.monteCarloSteps = 1000;
+        params.magneticField = datasetParams.magneticField;
+        params.couplingConstant = datasetParams.couplingConstant;
+        params.monteCarloSteps = datasetParams.monteCarloSteps;
+        params.randomSeed = datasetParams.initialSeed;
 
         runSingleSimulation(params, runID++);
     }
@@ -76,11 +80,14 @@ void DatasetGenerator::writeMetadata()
     metadata << "Monte Carlo Dataset Run\n";
     metadata << "=======================\n\n";
 
-    metadata << "Lattice Size      : 512\n";
-    metadata << "Temperature Sweep : 0.5 -> 5.0\n";
-    metadata << "Magnetic Field    : 0.0\n";
-    metadata << "Coupling Constant : 1.0\n";
-    metadata << "Monte Carlo Steps : 1000\n";
+    metadata << "Lattice Size      : " << datasetParams.latticeSize << '\n';
+    metadata << "Temperature Start : " << datasetParams.startTemperature << '\n';
+    metadata << "Temperature End   : " << datasetParams.endTemperature << '\n';
+    metadata << "Temperature Step  : " << datasetParams.temperatureStep << '\n';
+    metadata << "Magnetic Field    : " << datasetParams.magneticField << '\n';
+    metadata << "Coupling Constant : " << datasetParams.couplingConstant << '\n';
+    metadata << "Monte Carlo Steps : " << datasetParams.monteCarloSteps << '\n';
+    metadata << "Initial Seed      : " << datasetParams.initialSeed << '\n';
 
     metadata.close();
 
@@ -101,12 +108,18 @@ void DatasetGenerator::runSingleSimulation(
 
     SimulationResult result = simulation.runSimulation();
 
-    string spinFile =
-        SpinWriter::save(
+    string spinFile = "";
+
+    if (datasetParams.saveSpinFiles)
+    {
+        spinFile = SpinWriter::save(
             runFolder,
             runID,
             simulation.getSpinData(),
             simulation.getTotalSites());
+
+        cout << "Spin File : " << spinFile << endl;
+    }
 
     DatasetRecord record;
 
@@ -123,12 +136,10 @@ void DatasetGenerator::runSingleSimulation(
     record.acceptanceRatio = result.acceptanceRatio;
     record.executionTimeMS = result.executionTimeMS;
 
-    record.randomSeed = 0;
+    record.randomSeed = params.randomSeed;
     record.spinFile = spinFile;
 
     csvWriter->append(record);
-
-    cout << "Spin File : " << spinFile << endl;
 
     cout << "Simulation " << runID << " Complete." << endl;
 }

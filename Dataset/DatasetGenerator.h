@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../Core/SimulationParameters.h"
+#include "../Core/DatasetParameters.h"
 
 #include "CSVWriter.h"
 
@@ -24,6 +25,9 @@ private:
         int runID);
 
 private:
+    DatasetParameters datasetParams;
+
     std::string runFolder;
+
     std::unique_ptr<CSVWriter> csvWriter;
 };
