@@ -9,7 +9,7 @@ CSVWriter::CSVWriter(const string& filename)
 
 CSVWriter::~CSVWriter()
 {
-    if(file.is_open())
+    if (file.is_open())
         file.close();
 }
 
@@ -19,14 +19,42 @@ void CSVWriter::writeHeader()
         << "RunID,"
         << "LatticeSize,"
         << "Temperature,"
-        << "MagneticField,"
         << "CouplingConstant,"
+        << "MagneticField,"
         << "MonteCarloSteps,"
-        << "AverageEnergy,"
-        << "AverageMagnetization,"
-        << "AcceptanceRatio,"
-        << "ExecutionTimeMS,"
+        << "ThermalizationSteps,"
+        << "MeasurementInterval,"
         << "RandomSeed,"
+
+        << "InitialEnergy,"
+        << "FinalEnergy,"
+        << "AverageEnergy,"
+        << "MinimumEnergy,"
+        << "MaximumEnergy,"
+        << "EnergyVariance,"
+        << "EnergyStandardDeviation,"
+
+        << "InitialMagnetization,"
+        << "FinalMagnetization,"
+        << "AverageMagnetization,"
+        << "MinimumMagnetization,"
+        << "MaximumMagnetization,"
+        << "MagnetizationVariance,"
+        << "MagnetizationStandardDeviation,"
+
+        << "AcceptedMoves,"
+        << "RejectedMoves,"
+        << "TotalAttemptedMoves,"
+        << "AcceptanceRatio,"
+
+        << "UpSpins,"
+        << "DownSpins,"
+
+        << "SpecificHeat,"
+        << "Susceptibility,"
+        << "BinderCumulant,"
+
+        << "ExecutionTimeMS,"
         << "SpinFile\n";
 }
 
@@ -36,14 +64,42 @@ void CSVWriter::append(const DatasetRecord& r)
         << r.runID << ','
         << r.latticeSize << ','
         << r.temperature << ','
-        << r.magneticField << ','
         << r.couplingConstant << ','
+        << r.magneticField << ','
         << r.monteCarloSteps << ','
-        << r.averageEnergy << ','
-        << r.averageMagnetization << ','
-        << r.acceptanceRatio << ','
-        << r.executionTimeMS << ','
+        << r.thermalizationSteps << ','
+        << r.measurementInterval << ','
         << r.randomSeed << ','
+
+        << r.initialEnergy << ','
+        << r.finalEnergy << ','
+        << r.averageEnergy << ','
+        << r.minimumEnergy << ','
+        << r.maximumEnergy << ','
+        << r.energyVariance << ','
+        << r.energyStandardDeviation << ','
+
+        << r.initialMagnetization << ','
+        << r.finalMagnetization << ','
+        << r.averageMagnetization << ','
+        << r.minimumMagnetization << ','
+        << r.maximumMagnetization << ','
+        << r.magnetizationVariance << ','
+        << r.magnetizationStandardDeviation << ','
+
+        << r.acceptedMoves << ','
+        << r.rejectedMoves << ','
+        << r.totalAttemptedMoves << ','
+        << r.acceptanceRatio << ','
+
+        << r.upSpins << ','
+        << r.downSpins << ','
+
+        << r.specificHeat << ','
+        << r.susceptibility << ','
+        << r.binderCumulant << ','
+
+        << r.executionTimeMS << ','
         << r.spinFile
         << '\n';
 }

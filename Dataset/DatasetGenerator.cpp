@@ -170,29 +170,90 @@ cout << "=======================================\n\n";
         cout << "Spin File : " << spinFile << endl;
     }
 
-    DatasetRecord record;
+   DatasetRecord record;
 
-    record.runID = runID;
+//==================================================
+// Identification
+//==================================================
 
-    record.latticeSize = params.latticeSize;
-    record.temperature = params.temperature;
-    record.magneticField = params.magneticField;
-    record.couplingConstant = params.couplingConstant;
-    record.monteCarloSteps = params.monteCarloSteps;
+record.runID = runID;
 
-    // These will compile after DatasetRecord is expanded
-    // record.thermalizationSteps = params.thermalizationSteps;
-    // record.measurementInterval = params.measurementInterval;
+//==================================================
+// Simulation Parameters
+//==================================================
 
-    record.averageEnergy = result.averageEnergy;
-    record.averageMagnetization = result.averageMagnetization;
-    record.acceptanceRatio = result.acceptanceRatio;
-    record.executionTimeMS = result.executionTimeMS;
+record.latticeSize = params.latticeSize;
+record.temperature = params.temperature;
+record.couplingConstant = params.couplingConstant;
+record.magneticField = params.magneticField;
 
-    record.randomSeed = params.randomSeed;
-    record.spinFile = spinFile;
+record.monteCarloSteps = params.monteCarloSteps;
+record.thermalizationSteps = params.thermalizationSteps;
+record.measurementInterval = params.measurementInterval;
 
-    csvWriter->append(record);
+record.randomSeed = params.randomSeed;
+
+//==================================================
+// Energy Statistics
+//==================================================
+
+record.initialEnergy = result.initialEnergy;
+record.finalEnergy = result.finalEnergy;
+record.averageEnergy = result.averageEnergy;
+record.minimumEnergy = result.minimumEnergy;
+record.maximumEnergy = result.maximumEnergy;
+record.energyVariance = result.energyVariance;
+record.energyStandardDeviation = result.energyStandardDeviation;
+
+//==================================================
+// Magnetization Statistics
+//==================================================
+
+record.initialMagnetization = result.initialMagnetization;
+record.finalMagnetization = result.finalMagnetization;
+record.averageMagnetization = result.averageMagnetization;
+record.minimumMagnetization = result.minimumMagnetization;
+record.maximumMagnetization = result.maximumMagnetization;
+record.magnetizationVariance = result.magnetizationVariance;
+record.magnetizationStandardDeviation = result.magnetizationStandardDeviation;
+
+//==================================================
+// Monte Carlo Statistics
+//==================================================
+
+record.acceptedMoves = result.acceptedMoves;
+record.rejectedMoves = result.rejectedMoves;
+record.totalAttemptedMoves = result.totalAttemptedMoves;
+record.acceptanceRatio = result.acceptanceRatio;
+
+//==================================================
+// Spin Statistics
+//==================================================
+
+record.upSpins = result.upSpins;
+record.downSpins = result.downSpins;
+
+//==================================================
+// Thermodynamic Quantities
+//==================================================
+
+record.specificHeat = result.specificHeat;
+record.susceptibility = result.susceptibility;
+record.binderCumulant = result.binderCumulant;
+
+//==================================================
+// Timing
+//==================================================
+
+record.executionTimeMS = result.executionTimeMS;
+
+//==================================================
+// Output
+//==================================================
+
+record.spinFile = spinFile;
+
+csvWriter->append(record);
 
     cout << "Simulation " << runID << " Complete." << endl;
 }
