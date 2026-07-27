@@ -406,6 +406,35 @@ rightPtr[0:latticeSize])
     }
 
 
+    double calculateEnergy() const
+    {
+        double energy = 0.0;
+
+        const double J = params.couplingConstant;
+        const double H = params.magneticField;
+
+        for (int row = 0; row < N; row++)
+        {
+            for (int col = 0; col < N; col++)
+            {
+                int current =
+                    spin[index(row, col)];
+
+                energy +=
+                    -J *
+                    current *
+                    (
+                        spin[index(down[row], col)] +
+                        spin[index(row, right[col])]
+                    );
+
+                energy +=
+                    -H * current;
+            }
+        }
+
+        return energy / totalSites;
+    }
 
     double calculateMagnetization() const
     {
@@ -474,7 +503,7 @@ rightPtr[0:latticeSize])
         result.acceptanceRatio = getAcceptanceRatio();
 
         // Temporary values
-        result.averageEnergy = 0.0;
+        result.averageEnergy = calculateEnergy();
         result.executionTimeMS = chrono::duration<double, milli>(end - start).count();
 
         return result;
