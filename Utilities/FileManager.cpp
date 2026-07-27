@@ -27,3 +27,19 @@ std::string FileManager::generateTimestamp()
 
     return stream.str();
 }
+
+std::string FileManager::createRunDirectory()
+{
+    std::string folder =
+        "Output/" +
+        generateTimestamp() +
+        "_Run";
+
+    fs::create_directories(folder);
+
+    fs::create_directories(folder + "/logs");
+
+    fs::create_directories(folder + "/spins");
+
+    return folder;
+}

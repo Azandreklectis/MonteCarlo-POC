@@ -5,6 +5,7 @@
 #include "Dataset/CSVWriter.h"
 #include "Core/SimulationParameters.h"
 #include "Core/IsingSimulation.h"
+#include "Utilities/FileManager.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -56,8 +57,15 @@ int main()
 
         cout << "Creating CSV Writer..." << endl;
 
-        CSVWriter writer("Output/dataset.csv");
+        std::string runFolder =
+            FileManager::createRunDirectory();
 
+        std::cout << "Run Folder: "
+                  << runFolder
+                  << std::endl;
+
+        CSVWriter writer(runFolder + "/dataset.csv");
+        
         cout << "CSV Writer created successfully." << endl;
 
         //------------------------------------------------------
