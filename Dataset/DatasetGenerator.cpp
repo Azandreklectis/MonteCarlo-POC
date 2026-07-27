@@ -2,6 +2,7 @@
 
 #include "CSVWriter.h"
 #include "DatasetRecord.h"
+#include "SpinWriter.h"
 
 #include "../Core/SimulationParameters.h"
 #include "../Core/IsingSimulation.h"
@@ -28,15 +29,7 @@ void DatasetGenerator::generate()
 
     writeMetadata();
 
-    SimulationParameters params;
-
-    params.latticeSize = 512;
-    params.temperature = 2.2;
-    params.magneticField = 0.0;
-    params.couplingConstant = 1.0;
-    params.monteCarloSteps = 1000;
-
-    runSingleSimulation(params, 1);int runID = 1;
+    int runID = 1;
 
     for (double temperature = 0.5; temperature <= 5.0; temperature += 0.2)
     {
@@ -50,7 +43,6 @@ void DatasetGenerator::generate()
 
         runSingleSimulation(params, runID++);
     }
-
 
     cout << endl;
     cout << "Dataset Generation Complete." << endl;
@@ -85,7 +77,7 @@ void DatasetGenerator::writeMetadata()
     metadata << "=======================\n\n";
 
     metadata << "Lattice Size      : 512\n";
-    metadata << "Temperature       : 2.2\n";
+    metadata << "Temperature Sweep : 0.5 -> 5.0\n";
     metadata << "Magnetic Field    : 0.0\n";
     metadata << "Coupling Constant : 1.0\n";
     metadata << "Monte Carlo Steps : 1000\n";
@@ -109,6 +101,13 @@ void DatasetGenerator::runSingleSimulation(
 
     SimulationResult result = simulation.runSimulation();
 
+    string spinFile =
+        SpinWriter::save(
+            runFolder,
+            runID,
+            simulation.getSpinData(),
+            simulation.getTotalSites());
+
     DatasetRecord record;
 
     record.runID = runID;
@@ -125,9 +124,11 @@ void DatasetGenerator::runSingleSimulation(
     record.executionTimeMS = result.executionTimeMS;
 
     record.randomSeed = 0;
-    record.spinFile = "";
+    record.spinFile = spinFile;
 
     csvWriter->append(record);
+
+    cout << "Spin File : " << spinFile << endl;
 
     cout << "Simulation " << runID << " Complete." << endl;
 }

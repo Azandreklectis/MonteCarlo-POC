@@ -509,4 +509,20 @@ rightPtr[0:latticeSize])
         return result;
     }
 
+    
+    const int* getSpinData() const
+    {
+        return spin.get();
+    }
+
+    int getLatticeSize() const
+    {
+        return N;
+    }
+
+    int getTotalSites() const
+    {
+        return totalSites;
+    }
+
 };
