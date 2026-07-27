@@ -6,31 +6,31 @@ struct SimulationParameters
     // Lattice
     //==================================================
 
-    int latticeSize = 512;
+    int latticeSize = 46300;
 
     //==================================================
     // Physical Parameters
     //==================================================
 
-    double temperature = 2.5;
+    double temperature = 2.26;
 
     double couplingConstant = 1.0;
 
-    double magneticField = 0.0;
+    double magneticField = 0.55;
 
     //==================================================
     // Monte Carlo Parameters
     //==================================================
 
-    int monteCarloSteps = 1000;
+    int monteCarloSteps = 10000;
 
-    int thermalizationSteps = 200;
+    int thermalizationSteps = 1000;
 
-    int measurementInterval = 1;
+    int measurementInterval = 10;
 
     //==================================================
     // Random Number Generation
     //==================================================
 
-    unsigned int randomSeed = 0;
+    unsigned int randomSeed = 67;
 };
