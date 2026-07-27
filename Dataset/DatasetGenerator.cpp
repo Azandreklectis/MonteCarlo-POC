@@ -1,3 +1,8 @@
-//
-// Created by Hp on 25-07-2026.
-//
+#include "DatasetGenerator.h"
+
+#include <iostream>
+
+void DatasetGenerator::generate()
+{
+    std::cout << "Dataset Generator Started" << std::endl;
+}
