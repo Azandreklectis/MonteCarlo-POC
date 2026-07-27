@@ -42,7 +42,11 @@ void DatasetGenerator::generate()
         params.temperature = temperature;
         params.magneticField = datasetParams.magneticField;
         params.couplingConstant = datasetParams.couplingConstant;
+
         params.monteCarloSteps = datasetParams.monteCarloSteps;
+        params.thermalizationSteps = datasetParams.thermalizationSteps;
+        params.measurementInterval = datasetParams.measurementInterval;
+
         params.randomSeed = datasetParams.initialSeed;
 
         runSingleSimulation(params, runID++);
@@ -80,14 +84,16 @@ void DatasetGenerator::writeMetadata()
     metadata << "Monte Carlo Dataset Run\n";
     metadata << "=======================\n\n";
 
-    metadata << "Lattice Size      : " << datasetParams.latticeSize << '\n';
-    metadata << "Temperature Start : " << datasetParams.startTemperature << '\n';
-    metadata << "Temperature End   : " << datasetParams.endTemperature << '\n';
-    metadata << "Temperature Step  : " << datasetParams.temperatureStep << '\n';
-    metadata << "Magnetic Field    : " << datasetParams.magneticField << '\n';
-    metadata << "Coupling Constant : " << datasetParams.couplingConstant << '\n';
-    metadata << "Monte Carlo Steps : " << datasetParams.monteCarloSteps << '\n';
-    metadata << "Initial Seed      : " << datasetParams.initialSeed << '\n';
+    metadata << "Lattice Size          : " << datasetParams.latticeSize << '\n';
+    metadata << "Temperature Start     : " << datasetParams.startTemperature << '\n';
+    metadata << "Temperature End       : " << datasetParams.endTemperature << '\n';
+    metadata << "Temperature Step      : " << datasetParams.temperatureStep << '\n';
+    metadata << "Magnetic Field        : " << datasetParams.magneticField << '\n';
+    metadata << "Coupling Constant     : " << datasetParams.couplingConstant << '\n';
+    metadata << "Monte Carlo Steps     : " << datasetParams.monteCarloSteps << '\n';
+    metadata << "Thermalization Steps  : " << datasetParams.thermalizationSteps << '\n';
+    metadata << "Measurement Interval  : " << datasetParams.measurementInterval << '\n';
+    metadata << "Initial Seed          : " << datasetParams.initialSeed << '\n';
 
     metadata.close();
 
@@ -106,8 +112,51 @@ void DatasetGenerator::runSingleSimulation(
 
     IsingSimulation simulation(params);
 
-    SimulationResult result = simulation.runSimulation();
+SimulationResult result = simulation.runSimulation();
 
+cout << "\n========== Simulation Result ==========\n";
+
+cout << "Initial Energy               : " << result.initialEnergy << '\n';
+cout << "Final Energy                 : " << result.finalEnergy << '\n';
+cout << "Average Energy               : " << result.averageEnergy << '\n';
+cout << "Minimum Energy               : " << result.minimumEnergy << '\n';
+cout << "Maximum Energy               : " << result.maximumEnergy << '\n';
+cout << "Energy Variance              : " << result.energyVariance << '\n';
+cout << "Energy Std Dev               : " << result.energyStandardDeviation << '\n';
+
+cout << '\n';
+
+cout << "Initial Magnetization        : " << result.initialMagnetization << '\n';
+cout << "Final Magnetization          : " << result.finalMagnetization << '\n';
+cout << "Average Magnetization        : " << result.averageMagnetization << '\n';
+cout << "Minimum Magnetization        : " << result.minimumMagnetization << '\n';
+cout << "Maximum Magnetization        : " << result.maximumMagnetization << '\n';
+cout << "Magnetization Variance       : " << result.magnetizationVariance << '\n';
+cout << "Magnetization Std Dev        : " << result.magnetizationStandardDeviation << '\n';
+
+cout << '\n';
+
+cout << "Accepted Moves              : " << result.acceptedMoves << '\n';
+cout << "Rejected Moves              : " << result.rejectedMoves << '\n';
+cout << "Total Attempted Moves       : " << result.totalAttemptedMoves << '\n';
+cout << "Acceptance Ratio            : " << result.acceptanceRatio << '\n';
+
+cout << '\n';
+
+cout << "Up Spins                    : " << result.upSpins << '\n';
+cout << "Down Spins                  : " << result.downSpins << '\n';
+
+cout << '\n';
+
+cout << "Specific Heat               : " << result.specificHeat << '\n';
+cout << "Susceptibility              : " << result.susceptibility << '\n';
+cout << "Binder Cumulant             : " << result.binderCumulant << '\n';
+
+cout << '\n';
+
+cout << "Execution Time (ms)         : " << result.executionTimeMS << '\n';
+
+cout << "=======================================\n\n";
     string spinFile = "";
 
     if (datasetParams.saveSpinFiles)
@@ -130,6 +179,10 @@ void DatasetGenerator::runSingleSimulation(
     record.magneticField = params.magneticField;
     record.couplingConstant = params.couplingConstant;
     record.monteCarloSteps = params.monteCarloSteps;
+
+    // These will compile after DatasetRecord is expanded
+    // record.thermalizationSteps = params.thermalizationSteps;
+    // record.measurementInterval = params.measurementInterval;
 
     record.averageEnergy = result.averageEnergy;
     record.averageMagnetization = result.averageMagnetization;

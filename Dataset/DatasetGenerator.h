@@ -17,7 +17,9 @@ public:
 
 private:
     void createOutput();
+
     void createCSVWriter();
+
     void writeMetadata();
 
     void runSingleSimulation(

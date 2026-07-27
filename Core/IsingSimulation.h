@@ -37,6 +37,39 @@ private:
 
     long long acceptedMoves = 0;
 
+    //==================================================
+    // Simulation Result
+    //==================================================
+
+    SimulationResult result;
+
+    //==================================================
+    // Energy Accumulators
+    //==================================================
+
+    double energySum = 0.0;
+    double energySquaredSum = 0.0;
+
+    double minimumEnergy = 0.0;
+    double maximumEnergy = 0.0;
+
+    //==================================================
+    // Magnetization Accumulators
+    //==================================================
+
+    double magnetizationSum = 0.0;
+    double magnetizationSquaredSum = 0.0;
+    double magnetizationFourthPowerSum = 0.0;
+
+    double minimumMagnetization = 0.0;
+    double maximumMagnetization = 0.0;
+
+    //==================================================
+    // Measurement Statistics
+    //==================================================
+
+    int measurementCount = 0;
+
 public:
 
     void enterDeviceData()
@@ -467,7 +500,23 @@ rightPtr[0:latticeSize])
     void resetStatistics()
     {
         acceptedMoves = 0;
+
+        energySum = 0.0;
+        energySquaredSum = 0.0;
+
+        magnetizationSum = 0.0;
+        magnetizationSquaredSum = 0.0;
+        magnetizationFourthPowerSum = 0.0;
+
+        minimumEnergy = 0.0;
+        maximumEnergy = 0.0;
+
+        minimumMagnetization = 0.0;
+        maximumMagnetization = 0.0;
+
+        measurementCount = 0;
     }
+
     double getAcceptanceRatio() const
     {
         long long attemptedMoves =
@@ -483,33 +532,33 @@ rightPtr[0:latticeSize])
 
     SimulationResult runSimulation()
     {
+        result = SimulationResult{};
+
         resetStatistics();
 
         auto start = chrono::high_resolution_clock::now();
 
-        for (int step = 0; step < params.monteCarloSteps; step++)
-        {
-            monteCarloStep();
-        }
+        captureInitialState();
+
+        thermalize();
+
+        performMeasurements();
+
+        captureFinalState();
 
         auto end = chrono::high_resolution_clock::now();
 
-        updateHost();
-
-        SimulationResult result;
-
-        result.averageMagnetization = calculateMagnetization();
-
         result.acceptanceRatio = getAcceptanceRatio();
 
-        // Temporary values
-        result.averageEnergy = calculateEnergy();
-        result.executionTimeMS = chrono::duration<double, milli>(end - start).count();
+        result.executionTimeMS =
+            chrono::duration<double, milli>(end - start).count();
+
+        finalizeStatistics();
 
         return result;
     }
 
-    
+
     const int* getSpinData() const
     {
         return spin.get();
@@ -525,4 +574,173 @@ rightPtr[0:latticeSize])
         return totalSites;
     }
 
+    void thermalize()
+    {
+        for (int step = 0; step < params.thermalizationSteps; step++)
+        {
+            monteCarloStep();
+        }
+    }
+
+    void measureSystem()
+    {
+        double energy = calculateEnergy();
+        double magnetization = calculateMagnetization();
+
+        energySum += energy;
+        energySquaredSum += energy * energy;
+
+        magnetizationSum += magnetization;
+        magnetizationSquaredSum += magnetization * magnetization;
+        magnetizationFourthPowerSum +=
+            magnetization *
+            magnetization *
+            magnetization *
+            magnetization;
+
+        if (measurementCount == 0)
+        {
+            minimumEnergy = energy;
+            maximumEnergy = energy;
+
+            minimumMagnetization = magnetization;
+            maximumMagnetization = magnetization;
+        }
+        else
+        {
+            if (energy < minimumEnergy)
+                minimumEnergy = energy;
+
+            if (energy > maximumEnergy)
+                maximumEnergy = energy;
+
+            if (magnetization < minimumMagnetization)
+                minimumMagnetization = magnetization;
+
+            if (magnetization > maximumMagnetization)
+                maximumMagnetization = magnetization;
+        }
+
+        measurementCount++;
+    }
+
+    void performMeasurements()
+    {
+        for (int step = 0; step < params.monteCarloSteps; step++)
+        {
+            monteCarloStep();
+
+            if ((step + 1) % params.measurementInterval == 0)
+            {
+                updateHost();
+
+                measureSystem();
+            }
+        }
+    }
+
+    void captureInitialState()
+    {
+        updateHost();
+
+        result.initialEnergy = calculateEnergy();
+        result.initialMagnetization = calculateMagnetization();
+    }
+
+    void captureFinalState()
+    {
+        updateHost();
+
+        result.finalEnergy = calculateEnergy();
+        result.finalMagnetization = calculateMagnetization();
+
+        int up = 0;
+        int down = 0;
+
+        for (int i = 0; i < totalSites; i++)
+        {
+            if (spin[i] == 1)
+                up++;
+            else
+                down++;
+        }
+
+        result.upSpins = up;
+        result.downSpins = down;
+    }
+
+    void finalizeStatistics()
+    {
+        if (measurementCount == 0)
+            return;
+
+        // Energy Statistics
+        result.averageEnergy =
+            energySum / measurementCount;
+
+        result.minimumEnergy = minimumEnergy;
+        result.maximumEnergy = maximumEnergy;
+
+        result.energyVariance =
+            (energySquaredSum / measurementCount) -
+            (result.averageEnergy * result.averageEnergy);
+
+        if (result.energyVariance < 0.0)
+            result.energyVariance = 0.0;
+
+        result.energyStandardDeviation =
+            sqrt(result.energyVariance);
+
+
+        // Magnetization Statistics
+        result.averageMagnetization =
+            magnetizationSum / measurementCount;
+
+        result.minimumMagnetization =
+            minimumMagnetization;
+
+        result.maximumMagnetization =
+            maximumMagnetization;
+
+        result.magnetizationVariance =
+            (magnetizationSquaredSum / measurementCount) -
+            (result.averageMagnetization *
+             result.averageMagnetization);
+
+        if (result.magnetizationVariance < 0.0)
+            result.magnetizationVariance = 0.0;
+
+        result.magnetizationStandardDeviation =
+            sqrt(result.magnetizationVariance);
+
+
+        // Thermodynamic Quantities
+
+        result.specificHeat =
+            result.energyVariance /
+            (params.temperature * params.temperature);
+
+        result.susceptibility =
+            result.magnetizationVariance /
+            params.temperature;
+
+
+        double meanM2 =
+            magnetizationSquaredSum / measurementCount;
+
+        double meanM4 =
+            magnetizationFourthPowerSum / measurementCount;
+
+        if (meanM2 > 0.0)
+        {
+            result.binderCumulant =
+                1.0 -
+                meanM4 /
+                (3.0 * meanM2 * meanM2);
+        }
+        else
+        {
+            result.binderCumulant = 0.0;
+        }
+    }
 };

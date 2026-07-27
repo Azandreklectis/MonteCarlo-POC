@@ -1,6 +1,6 @@
 #pragma once
 
-struct SimulationParameters
+struct DatasetParameters
 {
     //==================================================
     // Lattice
@@ -9,10 +9,18 @@ struct SimulationParameters
     int latticeSize = 512;
 
     //==================================================
-    // Physical Parameters
+    // Temperature Sweep
     //==================================================
 
-    double temperature = 2.5;
+    double startTemperature = 1.0;
+
+    double endTemperature = 4.0;
+
+    double temperatureStep = 0.1;
+
+    //==================================================
+    // Physical Parameters
+    //==================================================
 
     double couplingConstant = 1.0;
 
@@ -29,8 +37,14 @@ struct SimulationParameters
     int measurementInterval = 1;
 
     //==================================================
-    // Random Number Generation
+    // Randomness
     //==================================================
 
-    unsigned int randomSeed = 0;
+    unsigned int initialSeed = 42;
+
+    //==================================================
+    // Output
+    //==================================================
+
+    bool saveSpinFiles = true;
 };

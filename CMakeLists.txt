@@ -26,6 +26,7 @@ add_executable(OpenACC_Test
         Utilities/FileManager.cpp
         Dataset/SpinWriter.h
         Dataset/SpinWriter.cpp
+        Core/DatasetGenerator.h
 )
 
 target_compile_options(OpenACC_Test PRIVATE
