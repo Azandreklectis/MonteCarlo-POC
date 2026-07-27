@@ -65,7 +65,7 @@ int main()
                   << std::endl;
 
         CSVWriter writer(runFolder + "/dataset.csv");
-        
+
         cout << "CSV Writer created successfully." << endl;
 
         //------------------------------------------------------
@@ -133,7 +133,7 @@ int main()
         cout << endl;
         cout << "Checking if CSV exists..." << endl;
 
-        if (fs::exists("Output/dataset.csv"))
+        if (fs::exists(runFolder + "/dataset.csv"))
         {
             cout << "SUCCESS: dataset.csv created." << endl;
         }
