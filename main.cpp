@@ -3,6 +3,8 @@
 #include <exception>
 
 #include "Dataset/CSVWriter.h"
+#include "Core/SimulationParameters.h"
+#include "Core/IsingSimulation.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -59,23 +61,60 @@ int main()
         cout << "CSV Writer created successfully." << endl;
 
         //------------------------------------------------------
-        // Create Dummy Record
+        // Create Simulation Parameters
+        //------------------------------------------------------
+
+        SimulationParameters params;
+
+        params.latticeSize = 512;
+        params.temperature = 2.2;
+        params.magneticField = 0.0;
+        params.couplingConstant = 1.0;
+        params.monteCarloSteps = 1000;
+
+        cout << "Creating Ising Simulation..." << endl;
+
+        IsingSimulation simulation(params);
+
+        cout << "Running Simulation..." << endl;
+
+        SimulationResult result =
+            simulation.runSimulation();
+
+        cout << "Simulation Finished." << endl;
+
+        //------------------------------------------------------
+        // Create Dataset Record
         //------------------------------------------------------
 
         DatasetRecord record;
 
         record.runID = 1;
-        record.latticeSize = 512;
-        record.temperature = 2.20;
-        record.magneticField = 0.0;
-        record.couplingConstant = 1.0;
-        record.monteCarloSteps = 1000;
-        record.averageEnergy = -1.83;
-        record.averageMagnetization = 0.91;
-        record.acceptanceRatio = 0.24;
-        record.executionTimeMS = 183.4;
-        record.randomSeed = 12345;
-        record.spinFile = "run000001.bin";
+
+        record.latticeSize = params.latticeSize;
+
+        record.temperature = params.temperature;
+
+        record.magneticField = params.magneticField;
+
+        record.couplingConstant = params.couplingConstant;
+
+        record.monteCarloSteps = params.monteCarloSteps;
+
+        record.averageEnergy = result.averageEnergy;
+
+        record.averageMagnetization =
+            result.averageMagnetization;
+
+        record.acceptanceRatio =
+            result.acceptanceRatio;
+
+        record.executionTimeMS =
+            result.executionTimeMS;
+
+        record.randomSeed = 0;
+
+        record.spinFile = "";
 
         cout << "Appending record..." << endl;
 
