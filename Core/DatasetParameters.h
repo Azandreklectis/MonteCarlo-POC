@@ -6,17 +6,17 @@ struct DatasetParameters
     // Lattice
     //==================================================
 
-    int latticeSize = 512;
+    int latticeSize = 4300;
 
     //==================================================
     // Temperature Sweep
     //==================================================
 
-    double startTemperature = 1.0;
+    double startTemperature = 2.6;
 
-    double endTemperature = 4.0;
+    double endTemperature = 5.0;
 
-    double temperatureStep = 0.1;
+    double temperatureStep = 0.2;
 
     //==================================================
     // Physical Parameters
@@ -24,23 +24,23 @@ struct DatasetParameters
 
     double couplingConstant = 1.0;
 
-    double magneticField = 0.0;
+    double magneticField = 0.55;
 
     //==================================================
     // Monte Carlo Parameters
     //==================================================
 
-    int monteCarloSteps = 1000;
+    int monteCarloSteps = 10000;
 
-    int thermalizationSteps = 200;
+    int thermalizationSteps = 500;
 
-    int measurementInterval = 1;
+    int measurementInterval = 100;
 
     //==================================================
     // Randomness
     //==================================================
 
-    unsigned int initialSeed = 42;
+    unsigned int initialSeed = 67;
 
     //==================================================
     // Output
