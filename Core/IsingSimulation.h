@@ -547,9 +547,7 @@ rightPtr[0:latticeSize])
         captureFinalState();
 
         auto end = chrono::high_resolution_clock::now();
-
-        result.acceptanceRatio = getAcceptanceRatio();
-
+        
         result.executionTimeMS =
             chrono::duration<double, milli>(end - start).count();
 
@@ -742,5 +740,19 @@ rightPtr[0:latticeSize])
         {
             result.binderCumulant = 0.0;
         }
+
+        result.acceptedMoves = acceptedMoves;
+
+        result.totalAttemptedMoves =
+            static_cast<long long>(params.monteCarloSteps) *
+            totalSites;
+
+        result.rejectedMoves =
+            result.totalAttemptedMoves -
+            result.acceptedMoves;
+
+        result.acceptanceRatio =
+            static_cast<double>(result.acceptedMoves) /
+            result.totalAttemptedMoves;
     }
 };
