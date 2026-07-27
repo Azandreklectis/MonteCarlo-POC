@@ -6,7 +6,7 @@ struct DatasetParameters
     // Lattice
     //==================================================
 
-    int latticeSize = 4300;
+    int latticeSize = 2048;
 
     //==================================================
     // Temperature Sweep
@@ -30,11 +30,11 @@ struct DatasetParameters
     // Monte Carlo Parameters
     //==================================================
 
-    int monteCarloSteps = 10000;
+    int monteCarloSteps = 2000;
 
-    int thermalizationSteps = 500;
+    int thermalizationSteps = 300;
 
-    int measurementInterval = 100;
+    int measurementInterval = 20;
 
     //==================================================
     // Randomness
