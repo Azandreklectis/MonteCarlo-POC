@@ -5,7 +5,7 @@
 
 #include "../Core/SimulationParameters.h"
 
-class CSVWriter;
+#include "CSVWriter.h"
 
 class DatasetGenerator
 {
