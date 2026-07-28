@@ -33,23 +33,49 @@ void DatasetGenerator::generate()
     int runID = 1;
 
     for (double temperature = datasetParams.startTemperature;
-         temperature <= datasetParams.endTemperature;
-         temperature += datasetParams.temperatureStep)
+     temperature <= datasetParams.endTemperature;
+     temperature += datasetParams.temperatureStep)
     {
-        SimulationParameters params;
+        for (double magneticField = datasetParams.startMagneticField;
+             magneticField <= datasetParams.endMagneticField;
+             magneticField += datasetParams.magneticFieldStep)
+        {
+            SimulationParameters params;
 
-        params.latticeSize = datasetParams.latticeSize;
-        params.temperature = temperature;
-        params.magneticField = datasetParams.magneticField;
-        params.couplingConstant = datasetParams.couplingConstant;
+            //==================================================
+            // Lattice
+            //==================================================
 
-        params.monteCarloSteps = datasetParams.monteCarloSteps;
-        params.thermalizationSteps = datasetParams.thermalizationSteps;
-        params.measurementInterval = datasetParams.measurementInterval;
+            params.latticeSize = datasetParams.latticeSize;
 
-        params.randomSeed = datasetParams.initialSeed;
+            //==================================================
+            // Physical Parameters
+            //==================================================
 
-        runSingleSimulation(params, runID++);
+            params.temperature = temperature;
+            params.magneticField = magneticField;
+            params.couplingConstant = datasetParams.couplingConstant;
+
+            //==================================================
+            // Monte Carlo Parameters
+            //==================================================
+
+            params.monteCarloSteps = datasetParams.monteCarloSteps;
+            params.thermalizationSteps = datasetParams.thermalizationSteps;
+            params.measurementInterval = datasetParams.measurementInterval;
+
+            //==================================================
+            // Random Seed
+            //==================================================
+
+            params.randomSeed = datasetParams.initialSeed;
+
+            //==================================================
+            // Run Simulation
+            //==================================================
+
+            runSingleSimulation(params, runID++);
+        }
     }
 
     cout << endl;
