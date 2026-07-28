@@ -439,62 +439,56 @@ rightPtr[0:latticeSize])
     }
 
 
-    double calculateEnergy() const
+    double calculateEnergy()
     {
+        const int latticeSize = N;
+        const int sites = totalSites;
+
+        int* spinPtr = spin.get();
+        int* downPtr = down.get();
+        int* rightPtr = right.get();
+
         double energy = 0.0;
 
-        const double J = params.couplingConstant;
-        const double H = params.magneticField;
-
-        for (int row = 0; row < N; row++)
+#pragma acc parallel loop collapse(2) reduction(+:energy) \
+present(spinPtr[0:sites],downPtr[0:latticeSize],rightPtr[0:latticeSize])
+        for(int row=0; row<latticeSize; row++)
         {
-            for (int col = 0; col < N; col++)
+            for(int col=0; col<latticeSize; col++)
             {
-                int current =
-                    spin[index(row, col)];
+                int idx = row*latticeSize+col;
+
+                int s = spinPtr[idx];
 
                 energy +=
-                    -J *
-                    current *
+                    -params.couplingConstant*s*
                     (
-                        spin[index(down[row], col)] +
-                        spin[index(row, right[col])]
+                        spinPtr[downPtr[row]*latticeSize+col] +
+                        spinPtr[row*latticeSize+rightPtr[col]]
                     );
 
                 energy +=
-                    -H * current;
+                    -params.magneticField*s;
             }
         }
 
-        return energy / totalSites;
+        return energy/totalSites;
     }
 
-    double calculateMagnetization() const
+    double calculateMagnetization()
     {
+        int* spinPtr = spin.get();
+
         long long totalSpin = 0;
 
-        int plus = 0;
-        int minus = 0;
-
-        for (int i = 0; i < totalSites; i++)
+#pragma acc parallel loop reduction(+:totalSpin) \
+present(spinPtr[0:totalSites])
+        for(int i=0;i<totalSites;i++)
         {
-            totalSpin += spin[i];
-
-            if (spin[i] == 1)
-                plus++;
-            else if (spin[i] == -1)
-                minus++;
-            else
-                std::cout << "Invalid spin: " << spin[i] << '\n';
+            totalSpin += spinPtr[i];
         }
 
-        std::cout << "Plus  : " << plus << '\n';
-        std::cout << "Minus : " << minus << '\n';
-        std::cout << "Sum   : " << totalSpin << '\n';
-        std::cout << "totalSites = " << totalSites << '\n';
-
         return static_cast<double>(totalSpin) / totalSites;
-
     }
 
     void resetStatistics()
@@ -630,7 +624,7 @@ rightPtr[0:latticeSize])
 
             if ((step + 1) % params.measurementInterval == 0)
             {
-                updateHost();
+                // updateHost();
 
                 measureSystem();
             }

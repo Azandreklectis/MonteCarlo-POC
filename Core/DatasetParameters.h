@@ -56,5 +56,5 @@ struct DatasetParameters
     // Output
     //==================================================
 
-    bool saveSpinFiles = true;
+    bool saveSpinFiles = false;
 };

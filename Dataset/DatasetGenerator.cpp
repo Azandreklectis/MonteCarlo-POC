@@ -140,49 +140,50 @@ void DatasetGenerator::runSingleSimulation(
 
 SimulationResult result = simulation.runSimulation();
 
-cout << "\n========== Simulation Result ==========\n";
+// cout << "\n========== Simulation Result ==========\n";
+//
+// cout << "Initial Energy               : " << result.initialEnergy << '\n';
+// cout << "Final Energy                 : " << result.finalEnergy << '\n';
+// cout << "Average Energy               : " << result.averageEnergy << '\n';
+// cout << "Minimum Energy               : " << result.minimumEnergy << '\n';
+// cout << "Maximum Energy               : " << result.maximumEnergy << '\n';
+// cout << "Energy Variance              : " << result.energyVariance << '\n';
+// cout << "Energy Std Dev               : " << result.energyStandardDeviation << '\n';
+//
+// cout << '\n';
+//
+// cout << "Initial Magnetization        : " << result.initialMagnetization << '\n';
+// cout << "Final Magnetization          : " << result.finalMagnetization << '\n';
+// cout << "Average Magnetization        : " << result.averageMagnetization << '\n';
+// cout << "Minimum Magnetization        : " << result.minimumMagnetization << '\n';
+// cout << "Maximum Magnetization        : " << result.maximumMagnetization << '\n';
+// cout << "Magnetization Variance       : " << result.magnetizationVariance << '\n';
+// cout << "Magnetization Std Dev        : " << result.magnetizationStandardDeviation << '\n';
+//
+// cout << '\n';
+//
+// cout << "Accepted Moves              : " << result.acceptedMoves << '\n';
+// cout << "Rejected Moves              : " << result.rejectedMoves << '\n';
+// cout << "Total Attempted Moves       : " << result.totalAttemptedMoves << '\n';
+// cout << "Acceptance Ratio            : " << result.acceptanceRatio << '\n';
+//
+// cout << '\n';
+//
+// cout << "Up Spins                    : " << result.upSpins << '\n';
+// cout << "Down Spins                  : " << result.downSpins << '\n';
+//
+// cout << '\n';
+//
+// cout << "Specific Heat               : " << result.specificHeat << '\n';
+// cout << "Susceptibility              : " << result.susceptibility << '\n';
+// cout << "Binder Cumulant             : " << result.binderCumulant << '\n';
+//
+// cout << '\n';
+//
+// cout << "Execution Time (ms)         : " << result.executionTimeMS << '\n';
+//
+// cout << "=======================================\n\n";
 
-cout << "Initial Energy               : " << result.initialEnergy << '\n';
-cout << "Final Energy                 : " << result.finalEnergy << '\n';
-cout << "Average Energy               : " << result.averageEnergy << '\n';
-cout << "Minimum Energy               : " << result.minimumEnergy << '\n';
-cout << "Maximum Energy               : " << result.maximumEnergy << '\n';
-cout << "Energy Variance              : " << result.energyVariance << '\n';
-cout << "Energy Std Dev               : " << result.energyStandardDeviation << '\n';
-
-cout << '\n';
-
-cout << "Initial Magnetization        : " << result.initialMagnetization << '\n';
-cout << "Final Magnetization          : " << result.finalMagnetization << '\n';
-cout << "Average Magnetization        : " << result.averageMagnetization << '\n';
-cout << "Minimum Magnetization        : " << result.minimumMagnetization << '\n';
-cout << "Maximum Magnetization        : " << result.maximumMagnetization << '\n';
-cout << "Magnetization Variance       : " << result.magnetizationVariance << '\n';
-cout << "Magnetization Std Dev        : " << result.magnetizationStandardDeviation << '\n';
-
-cout << '\n';
-
-cout << "Accepted Moves              : " << result.acceptedMoves << '\n';
-cout << "Rejected Moves              : " << result.rejectedMoves << '\n';
-cout << "Total Attempted Moves       : " << result.totalAttemptedMoves << '\n';
-cout << "Acceptance Ratio            : " << result.acceptanceRatio << '\n';
-
-cout << '\n';
-
-cout << "Up Spins                    : " << result.upSpins << '\n';
-cout << "Down Spins                  : " << result.downSpins << '\n';
-
-cout << '\n';
-
-cout << "Specific Heat               : " << result.specificHeat << '\n';
-cout << "Susceptibility              : " << result.susceptibility << '\n';
-cout << "Binder Cumulant             : " << result.binderCumulant << '\n';
-
-cout << '\n';
-
-cout << "Execution Time (ms)         : " << result.executionTimeMS << '\n';
-
-cout << "=======================================\n\n";
     string spinFile = "";
 
     if (datasetParams.saveSpinFiles)
