@@ -163,7 +163,7 @@ public:
 
         initialize();
 
-        updateHost();
+        // updateHost();
     }
 
     ~IsingSimulation()
@@ -633,7 +633,7 @@ present(spinPtr[0:totalSites])
 
     void captureInitialState()
     {
-        updateHost();
+        // updateHost();
 
         result.initialEnergy = calculateEnergy();
         result.initialMagnetization = calculateMagnetization();
@@ -641,24 +641,24 @@ present(spinPtr[0:totalSites])
 
     void captureFinalState()
     {
-        updateHost();
-
+        // updateHost();
+        //
         result.finalEnergy = calculateEnergy();
         result.finalMagnetization = calculateMagnetization();
-
-        int up = 0;
-        int down = 0;
-
-        for (int i = 0; i < totalSites; i++)
-        {
-            if (spin[i] == 1)
-                up++;
-            else
-                down++;
-        }
-
-        result.upSpins = up;
-        result.downSpins = down;
+        //
+        // int up = 0;
+        // int down = 0;
+        //
+        // for (int i = 0; i < totalSites; i++)
+        // {
+        //     if (spin[i] == 1)
+        //         up++;
+        //     else
+        //         down++;
+        // }
+        //
+        // result.upSpins = up;
+        // result.downSpins = down;
     }
 
     void finalizeStatistics()
