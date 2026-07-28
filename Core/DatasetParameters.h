@@ -6,7 +6,7 @@ struct DatasetParameters
     // Lattice
     //==================================================
 
-    int latticeSize = 2048;
+    int latticeSize = 512;
 
     //==================================================
     // Temperature Sweep
