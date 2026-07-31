@@ -1,12 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=openacc
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=08:00:00
 #SBATCH --output=job.%j.out
 #SBATCH --error=job.%j.err
+#SBATCH --reservation=iuac
+
 
 
 source setup_hpc.sh
