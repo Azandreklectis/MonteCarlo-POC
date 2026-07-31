@@ -26,7 +26,7 @@ struct DatasetParameters
 
     double endMagneticField = 0.0;
 
-    double magneticFieldStep = 0.1;
+    double magneticFieldStep = 0.0;
 
     //==================================================
     // Physical Parameters
