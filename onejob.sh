@@ -37,4 +37,26 @@ cd ~/MonteCarlo-POC/build
 export ACC_DEVICE_TYPE=nvidia
 export NVCOMPILER_ACC_NOTIFY=3
 
+echo "========== DEBUG =========="
+hostname
+pwd
+
+echo
+echo "DatasetParameters checksum:"
+md5sum ~/MonteCarlo-POC/Core/DatasetParameters.h
+
+echo
+echo "Executable checksum:"
+md5sum ~/MonteCarlo-POC/build/OpenACC_Test
+
+echo
+echo "Executable timestamp:"
+stat ~/MonteCarlo-POC/build/OpenACC_Test
+
+echo
+echo "DatasetParameters timestamp:"
+stat ~/MonteCarlo-POC/Core/DatasetParameters.h
+
+echo "==========================="
+
 ./OpenACC_Test

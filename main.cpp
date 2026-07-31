@@ -6,6 +6,13 @@ using namespace std;
 
 int main()
 {
+
+    cout << "Executable compiled on "
+     << __DATE__
+     << " "
+     << __TIME__
+     << endl;
+
     try
     {
         DatasetGenerator generator;
