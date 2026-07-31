@@ -12,10 +12,8 @@ struct DatasetParameters
     // Temperature Sweep
     //==================================================
 
-    double startTemperature = 0.1; // 0.0
-
-    double endTemperature = 10; // 10.0
-
+    double startTemperature = 0.1;
+    double endTemperature = 1.0;
     double temperatureStep = 0.1;
 
     //==================================================
@@ -23,9 +21,7 @@ struct DatasetParameters
     //==================================================
 
     double startMagneticField = 0.0;
-
-    double endMagneticField = 10.0;
-
+    double endMagneticField = 0.0;
     double magneticFieldStep = 0.1;
 
     //==================================================
@@ -34,17 +30,13 @@ struct DatasetParameters
 
     double couplingConstant = 1.0;
 
-    double magneticField = 0.55;
-
     //==================================================
     // Monte Carlo Parameters
     //==================================================
 
-    int monteCarloSteps = 2000;
-
-    int thermalizationSteps = 300;
-
-    int measurementInterval = 20;
+    int monteCarloSteps = 5000;
+    int thermalizationSteps = 2000;
+    int measurementInterval = 10;
 
     //==================================================
     // Randomness

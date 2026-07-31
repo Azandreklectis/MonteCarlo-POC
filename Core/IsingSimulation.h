@@ -709,12 +709,13 @@ present(spinPtr[0:totalSites])
         // Thermodynamic Quantities
 
         result.specificHeat =
-            result.energyVariance /
-            (params.temperature * params.temperature);
+(result.energyVariance * totalSites) /
+(params.temperature *
+ params.temperature);
 
         result.susceptibility =
-            result.magnetizationVariance /
-            params.temperature;
+(result.magnetizationVariance * totalSites) /
+params.temperature;
 
 
         double meanM2 =
