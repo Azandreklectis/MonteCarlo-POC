@@ -7,7 +7,7 @@
 #SBATCH --time=08:00:00
 #SBATCH --output=job.%j.out
 #SBATCH --error=job.%j.err
-#SBATCH --reservation=iuac
+#SBATCH --reservation=IUAC
 
 
 
