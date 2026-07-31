@@ -28,6 +28,7 @@ struct DatasetParameters
 
     double magneticFieldStep = 0.0;
 
+
     //==================================================
     // Physical Parameters
     //==================================================
