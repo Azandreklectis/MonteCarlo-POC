@@ -78,7 +78,7 @@ echo "======================================================"
 echo "RUNNING EXECUTABLE"
 echo "======================================================"
 
-cd /home/hpctw41/MonteCarlo-POC/build
+cd /scratch/hpctw41/MonteCarlo-POC/build
 
 echo
 echo "PWD after cd:"
