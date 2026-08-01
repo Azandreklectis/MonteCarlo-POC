@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=08:00:00
+#SBATCH --time=48:00:00
 #SBATCH --output=job.%j.out
 #SBATCH --error=job.%j.err
 #SBATCH --reservation=IUAC

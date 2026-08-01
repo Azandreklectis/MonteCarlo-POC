@@ -24,7 +24,7 @@ struct DatasetParameters
 
     double startMagneticField = 0.0;
 
-    double endMagneticField = 0.0;
+    double endMagneticField = 1.0;
 
     double magneticFieldStep = 0.2;
 
@@ -43,7 +43,7 @@ struct DatasetParameters
 
     int monteCarloSteps = 50000;
 
-    int thermalizationSteps = 200000;
+    int thermalizationSteps = 500000;
 
     int measurementInterval = 10;
 
