@@ -14,9 +14,9 @@ struct DatasetParameters
 
     double startTemperature = 0.5; // 0.0
 
-    double endTemperature = 0.5; // 10.0
+    double endTemperature = 3; // 10.0
 
-    double temperatureStep = 0.1;
+    double temperatureStep = 0.5;
 
     //==================================================
     // Magnetic Field Sweep
