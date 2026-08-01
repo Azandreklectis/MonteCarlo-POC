@@ -12,9 +12,9 @@ struct DatasetParameters
     // Temperature Sweep
     //==================================================
 
-    double startTemperature = 1.5; // 0.0
+    double startTemperature = 2.2; // 0.0
 
-    double endTemperature = 1.5; // 10.0
+    double endTemperature = 2.2; // 10.0
 
     double temperatureStep = 0.5;
 
