@@ -139,8 +139,10 @@ public:
         right = make_unique<int[]>(N);
 
         // Random seed
-        unsigned int seed = random_device{}();
+        // unsigned int seed = random_device{}();
 
+        unsigned int seed = params.randomSeed;
+        
         sweepState = seed ^ 0x9E3779B9u;
 
         // Periodic boundary lookup tables
