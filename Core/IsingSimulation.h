@@ -536,6 +536,8 @@ present(spinPtr[0:totalSites])
 
         thermalize();
 
+        acceptedMoves = 0;
+
         performMeasurements();
 
         captureFinalState();
