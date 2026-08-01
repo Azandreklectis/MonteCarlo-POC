@@ -43,7 +43,7 @@ struct DatasetParameters
 
     int monteCarloSteps = 5000;
 
-    int thermalizationSteps = 100000;
+    int thermalizationSteps = 150000;
 
     int measurementInterval = 10;
 
