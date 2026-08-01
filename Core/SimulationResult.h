@@ -30,6 +30,8 @@ struct SimulationResult
 
     double averageMagnetization = 0.0;
 
+    double averageAbsoluteMagnetization = 0.0;
+
     double minimumMagnetization = 0.0;
 
     double maximumMagnetization = 0.0;

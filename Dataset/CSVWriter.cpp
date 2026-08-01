@@ -29,6 +29,7 @@ void CSVWriter::writeHeader()
         << "InitialEnergy,"
         << "FinalEnergy,"
         << "AverageEnergy,"
+        <<"averageAbsoluteMagnetization,"
         << "MinimumEnergy,"
         << "MaximumEnergy,"
         << "EnergyVariance,"
@@ -82,6 +83,7 @@ void CSVWriter::append(const DatasetRecord& r)
         << r.initialMagnetization << ','
         << r.finalMagnetization << ','
         << r.averageMagnetization << ','
+        << r.averageAbsoluteMagnetization << ","
         << r.minimumMagnetization << ','
         << r.maximumMagnetization << ','
         << r.magnetizationVariance << ','

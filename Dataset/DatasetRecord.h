@@ -60,6 +60,8 @@ struct DatasetRecord
 
     double averageMagnetization;
 
+    double averageAbsoluteMagnetization;
+
     double minimumMagnetization;
 
     double maximumMagnetization;

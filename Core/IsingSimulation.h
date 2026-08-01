@@ -61,6 +61,8 @@ private:
     double magnetizationSquaredSum = 0.0;
     double magnetizationFourthPowerSum = 0.0;
 
+    double absoluteMagnetizationSum = 0.0;   // NEW
+
     double minimumMagnetization = 0.0;
     double maximumMagnetization = 0.0;
 
@@ -142,7 +144,7 @@ public:
         // unsigned int seed = random_device{}();
 
         unsigned int seed = params.randomSeed;
-        
+
         sweepState = seed ^ 0x9E3779B9u;
 
         // Periodic boundary lookup tables
@@ -501,6 +503,7 @@ present(spinPtr[0:totalSites])
         energySquaredSum = 0.0;
 
         magnetizationSum = 0.0;
+        absoluteMagnetizationSum = 0.0;
         magnetizationSquaredSum = 0.0;
         magnetizationFourthPowerSum = 0.0;
 
@@ -587,6 +590,7 @@ present(spinPtr[0:totalSites])
         energySquaredSum += energy * energy;
 
         magnetizationSum += magnetization;
+        absoluteMagnetizationSum += std::abs(magnetization);
         magnetizationSquaredSum += magnetization * magnetization;
         magnetizationFourthPowerSum +=
             magnetization *
@@ -691,6 +695,9 @@ present(spinPtr[0:totalSites])
         // Magnetization Statistics
         result.averageMagnetization =
             magnetizationSum / measurementCount;
+
+        result.averageAbsoluteMagnetization =
+            absoluteMagnetizationSum / measurementCount;
 
         result.minimumMagnetization =
             minimumMagnetization;

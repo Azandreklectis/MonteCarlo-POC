@@ -239,6 +239,7 @@ record.energyStandardDeviation = result.energyStandardDeviation;
 record.initialMagnetization = result.initialMagnetization;
 record.finalMagnetization = result.finalMagnetization;
 record.averageMagnetization = result.averageMagnetization;
+record.averageAbsoluteMagnetization = result.averageAbsoluteMagnetization;
 record.minimumMagnetization = result.minimumMagnetization;
 record.maximumMagnetization = result.maximumMagnetization;
 record.magnetizationVariance = result.magnetizationVariance;
