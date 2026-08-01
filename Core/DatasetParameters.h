@@ -12,11 +12,11 @@ struct DatasetParameters
     // Temperature Sweep
     //==================================================
 
-    double startTemperature = 2.269; // 0.0
+    double startTemperature = 0.5; // 0.0
 
-    double endTemperature = 2.269; // 10.0
+    double endTemperature = 3; // 10.0
 
-    double temperatureStep = 0.5;
+    double temperatureStep = 0.1;
 
     //==================================================
     // Magnetic Field Sweep
@@ -41,9 +41,9 @@ struct DatasetParameters
     // Monte Carlo Parameters
     //==================================================
 
-    int monteCarloSteps = 20000;
+    int monteCarloSteps = 50000;
 
-    int thermalizationSteps = 150000;
+    int thermalizationSteps = 200000;
 
     int measurementInterval = 10;
 
