@@ -57,6 +57,7 @@ void CSVWriter::writeHeader()
 
         << "ExecutionTimeMS,"
         << "SpinFile\n";
+        file.flush();
 }
 
 void CSVWriter::append(const DatasetRecord& r)
@@ -104,4 +105,5 @@ void CSVWriter::append(const DatasetRecord& r)
         << r.executionTimeMS << ','
         << r.spinFile
         << '\n';
+        file.flush();
 }
