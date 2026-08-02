@@ -16,8 +16,6 @@ source setup_hpc.sh
 export LD_LIBRARY_PATH=/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.2.0/gcc-14.2.0-tzadgwdvjenkrgflefidpb7lz636pcso/lib64:/home/apps/SPACK/spack/opt/spack/linux-almalinux8-cascadelake/gcc-13.2.0/gcc-14.2.0-tzadgwdvjenkrgflefidpb7lz636pcso/lib:$LD_LIBRARY_PATH
 
 export ACC_DEVICE_TYPE=nvidia
-export NVCOMPILER_ACC_NOTIFY=3
-
 echo "======================================================"
 echo "                 SLURM DEBUG INFO"
 echo "======================================================"
@@ -89,6 +87,8 @@ echo "Running:"
 readlink -f ./OpenACC_Test
 
 ldd ./OpenACC_Test | grep libstdc++
+
+unset NVCOMPILER_ACC_NOTIFY
 
 ./OpenACC_Test
 
