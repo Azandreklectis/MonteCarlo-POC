@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <random>
 
 using namespace std;
 
@@ -23,6 +24,8 @@ void DatasetGenerator::generate()
     cout << "======================================" << endl;
     cout << "Dataset Generator Started" << endl;
     cout << "======================================" << endl;
+
+    std::random_device randomDevice;
 
     createOutput();
 
@@ -68,8 +71,7 @@ void DatasetGenerator::generate()
             // Random Seed
             //==================================================
 
-            params.randomSeed = datasetParams.initialSeed;
-
+            params.randomSeed = randomDevice();
             //==================================================
             // Run Simulation
             //==================================================
