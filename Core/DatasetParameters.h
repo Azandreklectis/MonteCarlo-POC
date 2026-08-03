@@ -41,9 +41,9 @@ struct DatasetParameters
     // Monte Carlo Parameters
     //==================================================
 
-    int monteCarloSteps = 500;
+    int monteCarloSteps = 50000;
 
-    int thermalizationSteps = 500;
+    int thermalizationSteps = 500000;
 
     int measurementInterval = 10;
 
