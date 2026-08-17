@@ -14,7 +14,7 @@ struct DatasetParameters
 
     double startTemperature = 2.10; // 0.0
 
-    double endTemperature = 2.40; // 10.0
+    double endTemperature = 2.10; // 10.0
 
     double temperatureStep = 0.01;
 
@@ -22,7 +22,7 @@ struct DatasetParameters
     // Magnetic Field Sweep
     //==================================================
 
-    double startMagneticField = 0.0;
+    double startMagneticField = 0.10;
 
     double endMagneticField = 0.10;
 
@@ -57,5 +57,5 @@ struct DatasetParameters
     // Output
     //==================================================
 
-    bool saveSpinFiles = false;
+    bool saveSpinFiles = true;
 };
